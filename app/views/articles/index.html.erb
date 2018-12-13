@@ -1,0 +1,7 @@
+<h1>Articles Index</h1>
+
+<ul>
+  <% @articles.each do |article| %>
+    <li><%= article.title %>, by <%= article.user.username %></li>
+  <% end %>
+</ul>
