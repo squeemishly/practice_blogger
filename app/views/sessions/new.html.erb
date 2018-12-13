@@ -1,0 +1,15 @@
+<h1>Welcome!</h1>
+<h3>Please Sign In to Contribute</h3>
+
+<%= form_for(:session, url: login_path) do |f| %>
+  <%= f.label :username, class: 'label' %>
+  <%= f.text_field :username, class: 'text_input' %>
+
+  <%= f.label :password, class: 'label' %>
+  <%= f.password_field :password, class: 'text_input' %>
+
+  <%= f.submit "Login", class: 'login-submit' %>
+
+<% end %>
+
+<h3>Don't have an account? <%= link_to "Create Account", new_user_path %></h3>
