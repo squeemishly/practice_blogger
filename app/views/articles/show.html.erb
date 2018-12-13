@@ -1,0 +1,13 @@
+<h1><%= @article.title %></h1>
+
+<div>
+  <%= link_to "Return Home", root_path %>
+</div>
+
+<div>
+  <%= @article.body %>
+</div>
+
+<div>
+  written by: <%= @article.user.username %>
+</div>
