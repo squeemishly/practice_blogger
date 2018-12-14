@@ -7,12 +7,5 @@ class User < ApplicationRecord
   validates :password, presence: true
   validates :email, presence: true, uniqueness: true
 
-  def authenticate(username, password)
-    user = User.find_by(username: username)
-    if user && user.password == password
-      user
-    else
-      nil
-    end
-  end
+  has_secure_password
 end

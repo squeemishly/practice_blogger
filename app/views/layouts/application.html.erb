@@ -16,7 +16,7 @@
         <%= link_to "Logout", logout_path, method: :delete %>
         <%= link_to "Write New Blog Post", new_article_path %>
       <% else %>
-        <%= link_to "Login to contribute", login_path %>
+        <%= link_to "Login", login_path %> or <%= link_to "Create an Account", new_user_path %> to contribute
       <% end %>
 
       <% flash.each do |type, message| %>
