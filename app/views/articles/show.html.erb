@@ -11,3 +11,8 @@
 <div>
   written by: <%= @article.user.username %>
 </div>
+
+<% if current_user.id == @article.user.id %>
+  <%= link_to "Edit Post", edit_article_path(@article.id) %>
+  <%= link_to "Delete Post", article_path(@article.id), method: :delete %>
+<% end %>

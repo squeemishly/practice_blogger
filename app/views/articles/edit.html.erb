@@ -1,0 +1,17 @@
+<h1>Edit Your Blog Post: <%= @article.title %></h1>
+
+<%= form_for(@article) do |f| %>
+
+  <%= f.label :title %>
+  <%= f.text_field :title %><br />
+
+  <%= f.label :body %>
+  <%= f.text_area :body %><br>
+
+  <%= f.submit "Update Article" %>
+
+<% end %>
+
+<div>
+  <%= link_to "Return Home", root_path %>
+</div>

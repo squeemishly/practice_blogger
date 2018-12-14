@@ -14,8 +14,9 @@
       <% if current_user %>
         Logged in as <%= current_user.username %>
         <%= link_to "Logout", logout_path, method: :delete %>
+        <%= link_to "Write New Blog Post", new_article_path %>
       <% else %>
-        <%= link_to "Login", login_path %>
+        <%= link_to "Login to contribute", login_path %>
       <% end %>
 
       <% flash.each do |type, message| %>

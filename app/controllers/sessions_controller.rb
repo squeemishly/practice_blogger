@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
     @user = User.find_by(username: params[:session][:username])
     if @user && @user.authenticate(params[:session][:username], params[:session][:password])
       session[:user_id] = @user.id
-      redirect_to new_user_path #TODO update route
+      redirect_to articles_path
     else
       redirect_to '/login', alert: "Incorrect username or password"
     end
