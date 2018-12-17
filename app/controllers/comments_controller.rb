@@ -18,17 +18,27 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    Comment.delete(params[:id])
-    redirect_to article_path(@article)
+    if @comment.user == current_user || @article.user == current_user
+      Comment.delete(params[:id])
+      redirect_to article_path(@article)
+    else
+      render_404
+    end
   end
 
   def edit
-
+    if @comment.user != current_user
+      render_404
+    end
   end
 
   def update
-    @comment.update(comment_params)
-    redirect_to article_path(@article)
+    if @comment.user == current_user
+      @comment.update(comment_params)
+      redirect_to article_path(@article)
+    else
+      render_404
+    end
   end
 
   private
@@ -43,5 +53,13 @@ class CommentsController < ApplicationController
 
     def determine_comment
       @comment = Comment.find(params[:id])
+    end
+
+    def render_404
+      respond_to do |format|
+        format.html { render :file => "#{Rails.root}/public/404", :layout => false, :status => :not_found }
+        format.xml  { head :not_found }
+        format.any  { head :not_found }
+      end
     end
 end

@@ -25,17 +25,27 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-
+    if @article.user != current_user
+      render_404
+    end
   end
 
   def update
-    @article.update!(article_params)
-    redirect_to article_path(@article.id)
+    if @article.user == current_user
+      @article.update!(article_params)
+      redirect_to article_path(@article.id)
+    else
+      render_404
+    end
   end
 
   def destroy
-    Article.delete(params[:id])
-    redirect_to articles_path
+    if @article.user == current_user
+      Article.delete(params[:id])
+      redirect_to articles_path
+    else
+      render_404
+    end
   end
 
   private
@@ -46,5 +56,13 @@ class ArticlesController < ApplicationController
 
     def determine_article
       @article = Article.find(params[:id])
+    end
+
+    def render_404
+      respond_to do |format|
+        format.html { render :file => "#{Rails.root}/public/404", :layout => false, :status => :not_found }
+        format.xml  { head :not_found }
+        format.any  { head :not_found }
+      end
     end
 end
