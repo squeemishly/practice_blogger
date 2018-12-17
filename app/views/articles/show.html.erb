@@ -1,10 +1,6 @@
 <h1><%= @article.title %></h1>
 
 <div>
-  <%= link_to "Return Home", root_path %>
-</div>
-
-<div>
   <%= @article.body %>
 </div>
 
@@ -12,12 +8,18 @@
   written by: <%= @article.user.username %>
 </div>
 
-<% if current_user.id == @article.user.id %>
+<% if current_user && current_user.id == @article.user.id %>
   <%= link_to "Edit Post", edit_article_path(@article.id) %>
   <%= link_to "Delete Post", article_path(@article.id), method: :delete %>
 <% end %>
 
-<%= link_to "Add a Comment", new_article_comment_path(@article.id) %>
+<% if current_user %>
+  <%= link_to "Add a Comment", new_article_comment_path(@article.id) %>
+<% end %>
+
+<div>
+  <%= link_to "Return Home", root_path %>
+</div>
 
 <h3>Comments</h3>
 
@@ -25,7 +27,7 @@
   <div>
     <%= comment.body %></br>
     Contributed By: <%= comment.user.username %><br />
-    Posted: <%= comment.created_at %><br />
+    <%= comment.created_at.strftime("Posted: %m/%d/%Y") %><br />
     <% if current_user == @article.user || current_user == comment.user %>
       <%= link_to "Delete Comment", article_comment_path(@article, comment), method: :delete %>
     <% end %>
