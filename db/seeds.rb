@@ -18,7 +18,7 @@ end
 20.times do
   user = users.sample
 
-  article = Article.new(
+  article = Article.create(
     title: Faker::FamousLastWords.unique.last_words,
     body: Faker::ChuckNorris.unique.fact,
     user: user
@@ -32,7 +32,7 @@ end
 20.times do
   user = users.sample
 
-  article = Article.new(
+  article = Article.create(
     title: Faker::StarWars.unique.quote,
     body: Faker::ChuckNorris.unique.fact,
     user: user
@@ -46,7 +46,7 @@ end
 20.times do
   user = users.sample
 
-  article = Article.new(
+  article = Article.create(
     title: Faker::WorldOfWarcraft.unique.quote,
     body: Faker::PrincessBride.unique.quote,
     user: user
@@ -61,7 +61,7 @@ end
   user = users.sample
   article = articles.sample
 
-  comment = Comment.new(
+  comment = Comment.create(
     body: Faker::Hacker.unique.say_something_smart,
     user: user,
     article: article
