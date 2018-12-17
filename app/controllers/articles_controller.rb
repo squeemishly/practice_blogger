@@ -1,10 +1,12 @@
 class ArticlesController < ApplicationController
+  before_action :determine_article, only: [:show, :edit, :update]
+
   def index
     @articles = Article.all.reverse
   end
 
   def show
-    @article = Article.find(params[:id])
+
   end
 
   def new
@@ -12,7 +14,8 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    @article = Article.new(title: params[:article][:title], body: params[:article][:body], user_id: current_user.id)
+    @article = Article.new(article_params)
+    @article.user = current_user
     if @article.save
       redirect_to root_path
     else
@@ -22,12 +25,11 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    @article = Article.find(params[:id])
+
   end
 
   def update
-    @article = Article.find(params[:id])
-    @article.update(title: params[:article][:title], body: params[:article][:body])
+    @article.update!(article_params)
     redirect_to article_path(@article.id)
   end
 
@@ -35,4 +37,14 @@ class ArticlesController < ApplicationController
     Article.delete(params[:id])
     redirect_to articles_path
   end
+
+  private
+
+    def article_params
+      params.require(:article).permit(:title, :body)
+    end
+
+    def determine_article
+      @article = Article.find(params[:id])
+    end
 end

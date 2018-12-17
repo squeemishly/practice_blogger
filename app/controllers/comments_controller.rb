@@ -1,12 +1,13 @@
 class CommentsController < ApplicationController
+  before_action :determine_article
+  before_action :determine_comment, only: [:edit, :update]
+
   def new
-    @article = Article.find(params[:article_id])
     @comment = Comment.new
   end
 
   def create
-    @article = Article.find(params[:article_id])
-    @comment = Comment.new(article: @article, user: current_user, body: params[:comment][:body])
+    @comment = Comment.create_comment(comment_params, @article, current_user)
     if @comment.body == ""
       flash[:alert] = "Please add a comment to continue"
       redirect_to new_article_comment_path(@article)
@@ -17,20 +18,30 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @article = Article.find(params[:article_id])
     Comment.delete(params[:id])
     redirect_to article_path(@article)
   end
 
   def edit
-    @article = Article.find(params[:article_id])
-    @comment = Comment.find(params[:id])
+
   end
 
   def update
-    @article = Article.find(params[:article_id])
-    @comment = Comment.find(params[:id])
-    @comment.update(body: params[:comment][:body])
+    @comment.update(comment_params)
     redirect_to article_path(@article)
   end
+
+  private
+
+    def comment_params
+      params.require(:comment).permit(:body)
+    end
+
+    def determine_article
+      @article = Article.find(params[:article_id])
+    end
+
+    def determine_comment
+      @comment = Comment.find(params[:id])
+    end
 end
