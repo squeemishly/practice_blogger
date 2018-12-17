@@ -21,4 +21,16 @@ class CommentsController < ApplicationController
     Comment.delete(params[:id])
     redirect_to article_path(@article)
   end
+
+  def edit
+    @article = Article.find(params[:article_id])
+    @comment = Comment.find(params[:id])
+  end
+
+  def update
+    @article = Article.find(params[:article_id])
+    @comment = Comment.find(params[:id])
+    @comment.update(body: params[:comment][:body])
+    redirect_to article_path(@article)
+  end
 end

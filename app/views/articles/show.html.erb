@@ -29,5 +29,9 @@
     <% if current_user == @article.user || current_user == comment.user %>
       <%= link_to "Delete Comment", article_comment_path(@article, comment), method: :delete %>
     <% end %>
+
+    <% if current_user == comment.user %>
+      <%= link_to "Edit Comment", edit_article_comment_path(@article, comment) %>
+    <% end %>
   </div><br />
 <% end %>
