@@ -11,7 +11,14 @@ class CommentsController < ApplicationController
       flash[:alert] = "Please add a comment to continue"
       redirect_to new_article_comment_path(@article)
     else
+      @comment.save
       redirect_to article_path(@article)
     end
+  end
+
+  def destroy
+    @article = Article.find(params[:article_id])
+    Comment.delete(params[:id])
+    redirect_to article_path(@article)
   end
 end

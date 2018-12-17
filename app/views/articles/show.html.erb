@@ -19,9 +19,15 @@
 
 <%= link_to "Add a Comment", new_article_comment_path(@article.id) %>
 
+<h3>Comments</h3>
+
 <% @article.comments.reverse.each do |comment| %>
   <div>
     <%= comment.body %></br>
-    - contributed by <%= comment.user.username %>
+    Contributed By: <%= comment.user.username %><br />
+    Posted: <%= comment.created_at %><br />
+    <% if current_user == @article.user || current_user == comment.user %>
+      <%= link_to "Delete Comment", article_comment_path(@article, comment), method: :delete %>
+    <% end %>
   </div><br />
 <% end %>
