@@ -1,0 +1,16 @@
+<h3>Add a Comment to <%= @article.title %></h3>
+
+<%= @article.body %>
+
+<%= form_for [@article, @comment] do |f| %>
+
+  <%= f.label :body %>
+  <%= f.text_area :body %><br>
+
+  <%= f.submit "Add Comment" %>
+
+<% end %>
+
+<div>
+  <%= link_to "Return Home", root_path %>
+</div>

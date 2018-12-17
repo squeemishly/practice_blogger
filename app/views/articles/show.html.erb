@@ -16,3 +16,12 @@
   <%= link_to "Edit Post", edit_article_path(@article.id) %>
   <%= link_to "Delete Post", article_path(@article.id), method: :delete %>
 <% end %>
+
+<%= link_to "Add a Comment", new_article_comment_path(@article.id) %>
+
+<% @article.comments.reverse.each do |comment| %>
+  <div>
+    <%= comment.body %></br>
+    - contributed by <%= comment.user.username %>
+  </div><br />
+<% end %>

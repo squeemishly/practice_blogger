@@ -7,5 +7,7 @@ Rails.application.routes.draw do
 
   resources :users, only: [:new, :create]
 
-  resources :articles
+  resources :articles do
+    resources :comments, only: [:new, :create]
+  end
 end
