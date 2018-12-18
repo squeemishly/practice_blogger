@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
   before_action :determine_article
-  before_action :determine_comment, only: [:edit, :update]
+  before_action :determine_comment, only: [:edit, :update, :destroy]
 
   def new
     @comment = Comment.new
@@ -27,9 +27,7 @@ class CommentsController < ApplicationController
   end
 
   def edit
-    if @comment.user != current_user
-      render_404
-    end
+    render_404 unless @comment.user == current_user
   end
 
   def update
@@ -56,10 +54,6 @@ class CommentsController < ApplicationController
     end
 
     def render_404
-      respond_to do |format|
-        format.html { render :file => "#{Rails.root}/public/404", :layout => false, :status => :not_found }
-        format.xml  { head :not_found }
-        format.any  { head :not_found }
-      end
+      render file: "/public/404"
     end
 end

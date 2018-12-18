@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  before_action :determine_article, only: [:show, :edit, :update]
+  before_action :determine_article, only: [:show, :edit, :update, :destroy]
 
   def index
     @articles = Article.all.reverse
@@ -25,9 +25,7 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    if @article.user != current_user
-      render_404
-    end
+    render_404 unless @article.user == current_user
   end
 
   def update
@@ -59,10 +57,6 @@ class ArticlesController < ApplicationController
     end
 
     def render_404
-      respond_to do |format|
-        format.html { render :file => "#{Rails.root}/public/404", :layout => false, :status => :not_found }
-        format.xml  { head :not_found }
-        format.any  { head :not_found }
-      end
+      render file: "/public/404"
     end
 end
