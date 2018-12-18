@@ -12,4 +12,14 @@ RSpec.describe User, type: :model do
   context "relationships" do
     it { should have_many(:articles) }
   end
+
+  context "user roles" do
+    it "has a default and admin role" do
+      user_roles = ["default", "admin"]
+
+      user_roles.each_with_index do |role, index|
+        expect(role).to eq user_roles[index]
+      end
+    end
+  end
 end

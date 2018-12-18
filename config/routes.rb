@@ -10,4 +10,8 @@ Rails.application.routes.draw do
   resources :articles do
     resources :comments, only: [:new, :create, :destroy, :edit, :update]
   end
+
+  namespace :admin do
+    resources :dashboard, only: [:show]
+  end
 end

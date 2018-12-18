@@ -1,6 +1,14 @@
 users = []
 articles = []
 
+User.create(
+  first_name: "Admin",
+  last_name: "McAdminy",
+  username: "AdminMcAdminy",
+  email: "AdminMcAdminy@admin.com",
+  password: "pass"
+)
+
 10.times do
   user = User.create(
     first_name: Faker::Name.first_name,
