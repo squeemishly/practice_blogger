@@ -26,6 +26,14 @@
       <% flash.each do |type, message| %>
         <%= content_tag :div, sanitize(message), class: type %>
       <% end %>
+
+      <div>
+        <h3>Find a Articles by Creator's Username</h3>
+        <%= form_tag(search_path(1), method: :get) do %>
+        <%= text_field_tag(:article_search, params[:search]) %>
+        <%= submit_tag "Search" %>
+        <% end %>
+      </div>
     </nav>
 
     <%= yield %>
