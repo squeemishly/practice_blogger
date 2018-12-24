@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   root 'articles#index'
 
-  resources :users, only: [:new, :create]
+  resources :users, only: [:new, :create, :edit, :update, :show]
 
   resources :articles do
     resources :comments, only: [:new, :create, :destroy, :edit, :update]

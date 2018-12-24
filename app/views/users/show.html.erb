@@ -1,0 +1,20 @@
+<h1><%= @user.username %> Profile Page</h1>
+
+<% if @user.id == current_user.id || current_admin? %>
+  <h3>Information:</h3>
+  <div>
+    Name: <%= @user.first_name %> <%= @user.last_name %>
+    Username: <%= @user.username %>
+    Email: <%= @user.email %>
+    Member since: <%= @user.created_at.strftime("%m/%d/%Y") %>
+  </div>
+
+  <%= link_to "Update Profile Information", edit_user_path(@user.id) %>
+<% end %>
+
+<h3>Articles by <%= @user.username %></h3>
+<ul>
+  <% @user.articles.each do |article| %>
+    <li><%= link_to article.title, article_path(article.id) %>
+  <% end %>
+</ul>

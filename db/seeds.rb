@@ -6,7 +6,8 @@ User.create(
   last_name: "McAdminy",
   username: "AdminMcAdminy",
   email: "AdminMcAdminy@admin.com",
-  password: "pass"
+  password: "pass",
+  role: "admin"
 )
 
 10.times do

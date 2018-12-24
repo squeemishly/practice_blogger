@@ -2,6 +2,6 @@
 
 <ul>
   <% @articles.each do |article| %>
-    <li><%= link_to "#{article.title}, by #{article.user.username}", article_path(article.id) %></li>
+    <li><%= link_to article.title, article_path(article.id) %> by <%= link_to article.user.username, user_path(article.user.id) %></li>
   <% end %>
 </ul>
