@@ -38,7 +38,7 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
-    if @article.user == current_user || current_user.role == "admin"
+    if @article.user == current_user || current_admin?
       Article.delete(params[:id])
       redirect_to articles_path
     else

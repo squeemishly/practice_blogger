@@ -18,7 +18,7 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    if @comment.user == current_user || @article.user == current_user
+    if @comment.user == current_user || @article.user == current_user || current_admin?
       Comment.delete(params[:id])
       redirect_to article_path(@article)
     else

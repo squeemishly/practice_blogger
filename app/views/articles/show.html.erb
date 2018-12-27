@@ -12,7 +12,7 @@
   <%= link_to "Edit Post", edit_article_path(@article.id) %>
 <% end %>
 
-<% if (current_user && (current_user.id == @article.user.id || current_user.role == "admin")) %>
+<% if (current_user && (current_user.id == @article.user.id || current_admin?)) %>
   <%= link_to "Delete Post", article_path(@article.id), method: :delete %>
 <% end %>
 
@@ -31,7 +31,7 @@
     <%= comment.body %></br>
     Contributed By: <%= comment.user.username %><br />
     <%= comment.created_at.strftime("Posted: %m/%d/%Y") %><br />
-    <% if current_user == @article.user || current_user == comment.user %>
+    <% if current_user && (current_user == @article.user || current_user == comment.user || current_admin?) %>
       <%= link_to "Delete Comment", article_comment_path(@article, comment), method: :delete %>
     <% end %>
 
