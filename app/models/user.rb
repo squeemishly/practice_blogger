@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :articles
+  has_many :articles, dependent: :destroy
 
   validates :username, presence: true, uniqueness: true
   validates :first_name, presence: true

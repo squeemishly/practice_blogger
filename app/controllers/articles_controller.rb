@@ -17,7 +17,7 @@ class ArticlesController < ApplicationController
     @article = Article.new(article_params)
     @article.user = current_user
     if @article.save
-      redirect_to root_path
+      redirect_to article_path(@article.id)
     else
       flash[:alert] = "Please finish writing your article!"
       render :new
@@ -38,7 +38,7 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
-    if @article.user == current_user
+    if @article.user == current_user || current_user.role == "admin"
       Article.delete(params[:id])
       redirect_to articles_path
     else

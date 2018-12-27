@@ -10,6 +10,9 @@
 
 <% if current_user && current_user.id == @article.user.id %>
   <%= link_to "Edit Post", edit_article_path(@article.id) %>
+<% end %>
+
+<% if (current_user && (current_user.id == @article.user.id || current_user.role == "admin")) %>
   <%= link_to "Delete Post", article_path(@article.id), method: :delete %>
 <% end %>
 
