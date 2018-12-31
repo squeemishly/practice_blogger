@@ -57,6 +57,6 @@ class ArticlesController < ApplicationController
     end
 
     def render_404
-      render file: "/public/404"
+      render file: "/public/404", status: 404
     end
 end
