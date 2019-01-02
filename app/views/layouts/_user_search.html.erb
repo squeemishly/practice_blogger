@@ -1,0 +1,5 @@
+<h6>Find all Articles by Creator's Username</h6>
+<%= form_tag(search_path(1), method: :get) do %>
+  <%= text_field_tag(:article_search, params[:search]) %>
+  <%= submit_tag "Search" %>
+<% end %>

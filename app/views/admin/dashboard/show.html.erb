@@ -1,7 +1,7 @@
 <h1>Admin Dashboard</h1>
 
 <h3>Find a User by Username</h3>
-<%= form_tag(admin_dashboard_path(current_user.id), method: :get) do %>
+<%= form_tag(admin_dashboard_path(current_user), method: :get) do %>
   <%= text_field_tag(:user_search, params[:search]) %>
   <%= submit_tag "Find User" %>
 <% end %>

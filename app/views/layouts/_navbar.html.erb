@@ -1,0 +1,13 @@
+<nav class="navbar">
+  <%= link_to "Return Home", root_path %>
+  <% if current_user %>
+    <% if current_admin? %>
+    <%= link_to "Dashboard", admin_dashboard_path(current_user) %>
+    <% end %>
+    <%= link_to "Write New Blog Post", new_article_path %>
+    <%= link_to "#{current_user.username} profile", user_path(current_user) %>
+    <%= link_to "Logout", logout_path, method: :delete %>
+  <% else %>
+    <%= link_to "Login", login_path %> or <%= link_to "Create an Account", new_user_path %> to contribute
+  <% end %>
+</nav>
