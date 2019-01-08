@@ -8,6 +8,11 @@ h5,
 h6 {
   font-weight: normal;
   text-transform: capitalize;
+  color: $second-text;
+}
+
+a {
+  color: $second-text;
 }
 
 body {

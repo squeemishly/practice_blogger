@@ -1,0 +1,28 @@
+.navbar {
+  background: $dark;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+
+  .nav-link {
+    color: $light-text;
+    padding-right: 1em;
+  }
+
+  .user-login{
+    .nav-link {
+      color: $light-text;
+    }
+  }
+}
+
+.user-search {
+  background: $light;
+  display: flex;
+  padding: 5px;
+  align-items: center;
+
+  .user-search-heading {
+    margin: 5px 10px;
+  }
+}
