@@ -6,7 +6,7 @@ class ArticlesController < ApplicationController
   end
 
   def show
-
+    @comments = Comment.comments_to_display(@article, params[:page])
   end
 
   def new
