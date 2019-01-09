@@ -13,8 +13,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'bcrypt'
 gem 'faker'
-# gem 'bootstrap', '~> 4.2.1'
-# gem 'jquery-rails'
+gem 'kaminari'
 
 group :development, :test do
   gem 'rspec-rails'

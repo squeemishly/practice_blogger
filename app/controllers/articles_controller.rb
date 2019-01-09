@@ -2,7 +2,7 @@ class ArticlesController < ApplicationController
   before_action :determine_article, only: [:show, :edit, :update, :destroy]
 
   def index
-    @articles = Article.all.reverse
+    @articles = Article.articles_to_display(params[:page], params[:limit])
   end
 
   def show

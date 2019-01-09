@@ -1,7 +1,17 @@
 <h1>Articles Index</h1>
 
+<div>
+  <h3>Choose Article Display Density:</h3>
+  <%= form_tag articles_path, method: :get do %>
+    <%= select_tag :limit, options_for_select([10, 20, 50, 100], selected: params[:limit] || 10) %>
+    <%= submit_tag "Change Density" %>
+  <% end %>
+</div>
+
 <ul>
   <% @articles.each do |article| %>
     <li><%= link_to article.title, article_path(article.id) %> by <%= link_to article.user.username, user_path(article.user.id) %></li>
   <% end %>
 </ul>
+
+<%= paginate @articles %>
