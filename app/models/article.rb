@@ -9,7 +9,7 @@ class Article < ApplicationRecord
     page_number = page_number ||= 1
     limit = limit ||= 10
 
-    articles_list = Article.order(:created_at).reverse
+    articles_list = Article.order(created_at: :desc)
     Kaminari.paginate_array(articles_list).page(page_number).per(limit)
   end
 end

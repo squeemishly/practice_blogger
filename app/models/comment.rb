@@ -11,10 +11,10 @@ class Comment < ApplicationRecord
     comment
   end
 
-  def self.comments_to_display(article, page_number)
+  def self.comments_to_display(article, page_number, limit = 5)
     page_number = page_number ||= 1
 
-    comments = article.comments.order(:created_at).reverse
-    Kaminari.paginate_array(comments).page(page_number).per(5)
+    comments = article.comments.order(created_at: :desc)
+    Kaminari.paginate_array(comments).page(page_number).per(limit)
   end
 end

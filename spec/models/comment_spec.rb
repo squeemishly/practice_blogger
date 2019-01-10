@@ -58,7 +58,7 @@ RSpec.describe Comment, type: :model do
 
     context ".comments_to_display" do
       it "returns 5 comments for the article" do
-        (1..10).each do |i|
+        (1..3).each do |i|
           Comment.create(
             body: "fake comment #{i}",
             article: article,
@@ -66,14 +66,11 @@ RSpec.describe Comment, type: :model do
           )
         end
 
-        comments = Comment.comments_to_display(article, nil)
+        comments = Comment.comments_to_display(article, 1, 2)
+        comment_bodies = comments.map { |comment| comment.body }
+        expected = ["fake comment 3", "fake comment 2"]
 
-        expect(comments).to be_an Array
-        expect(comments.first).to be_a Comment
-        expect(comments.first.body).to eq "fake comment 10"
-        expect(comments.last.body).to eq "fake comment 6"
-        expect(comments.find { |comment| comment.body == "fake comment 9"}).to be_a Comment
-        expect(comments.find { |comment| comment.body == "fake comment 5"}).to be nil
+        expect(comment_bodies).to eq expected
       end
     end
   end

@@ -43,23 +43,30 @@ RSpec.describe Article, type: :model do
 
       it "returns the 10 most recent articles by default" do
         articles = Article.articles_to_display(nil, nil)
+        article_titles = articles.map { |article| article.title }
+        expected = [
+          "fake title 15",
+          "fake title 14",
+          "fake title 13",
+          "fake title 12",
+          "fake title 11",
+          "fake title 10",
+          "fake title 9",
+          "fake title 8",
+          "fake title 7",
+          "fake title 6"
+        ]
 
-        expect(articles).to be_an Array
-        expect(articles.count).to eq 10
-        expect(articles.first.title).to eq "fake title 15"
-        expect(articles.last.title).to eq "fake title 6"
+        expect(article_titles).to eq expected
       end
 
 
       it "returns the number of articles requested" do
-        articles = Article.articles_to_display(1, 5)
+        articles = Article.articles_to_display(1, 2)
+        article_titles = articles.map { |article| article.title }
+        expected = ["fake title 15", "fake title 14"]
 
-        expect(articles.count).to eq 5
-        expect(articles.first).to be_an Article
-        expect(articles.first.title).to eq "fake title 15"
-        expect(articles.last.title).to eq "fake title 11"
-        expect(articles.find { |article| article.title == "fake title 14"}).to be_an Article
-        expect(articles.find { |article| article.title == "fake title 10"}).to be nil
+        expect(article_titles).to eq expected
       end
     end
   end
