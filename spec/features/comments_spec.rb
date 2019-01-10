@@ -16,7 +16,7 @@ describe "Article Comments" do
     @article = Article.create!(
       title: "Fake Title",
       body: "Fake Body",
-      user_id: user.id
+      user: user
     )
 
     @admin = User.create!(
@@ -38,8 +38,8 @@ describe "Article Comments" do
     )
 
     @comment = Comment.create!(
-      article_id: article.id,
-      user_id: rando_user.id,
+      article: article,
+      user: rando_user,
       body: "Fake Comment"
     )
 
@@ -69,10 +69,36 @@ describe "Article Comments" do
 
   describe "view all commments on an article" do
     it "allows all visitors to view all comments on an article" do
+      (1..10).each do |i|
+        Comment.create!(
+          article: article,
+          user: rando_user,
+          body: "Fake Comment #{i}"
+        )
+      end
+
       visit article_path(article.id)
+
+      expect(page).to have_content "Fake Comment 10"
+      expect(page).to have_content "Contributed By: #{rando_user.username}"
+      expect(page).to have_content "Displaying comments 1 - 5 of 11 in total"
+      expect(page).to_not have_content "Fake Comment 5"
+
+
+      click_on "2"
+
+      expect(page).to have_content "Fake Comment 5"
+      expect(page).to have_content "Contributed By: #{rando_user.username}"
+      expect(page).to have_content "Displaying comments 6 - 10 of 11 in total"
+      expect(page).to_not have_content "Fake Comment 10"
+
+      click_on "Next"
 
       expect(page).to have_content "Fake Comment"
       expect(page).to have_content "Contributed By: #{rando_user.username}"
+      expect(page).to have_content "Displaying comment 11 - 11 of 11 in total"
+      expect(page).to_not have_content "Fake Comment 10"
+      expect(page).to_not have_content "Fake Comment 5"
     end
   end
 

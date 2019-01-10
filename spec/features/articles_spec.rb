@@ -16,7 +16,7 @@ describe "Articles pages" do
     @article = Article.create!(
       title: "Fake Title",
       body: "Fake Body",
-      user_id: user.id
+      user: user
     )
 
     @admin = User.create!(
@@ -52,6 +52,49 @@ describe "Articles pages" do
 
       expect(page).to have_content article.title
       expect(page).to have_content user.username
+    end
+
+    context "pagination" do
+      it "automatically paginates after 10 articles" do
+        (1..20).each do |i|
+          Article.create(
+            title: "fake title #{i}",
+            body: "fake body",
+            user: user
+          )
+        end
+
+        visit root_path
+
+        expect(page).to have_content "Displaying articles 1 - 10 of 21 in total"
+        expect(page).to have_link "fake title 20"
+        expect(page).to_not have_link "fake title 10"
+
+        click_link "2"
+
+        expect(page).to have_content "Displaying articles 11 - 20 of 21 in total"
+        expect(page).to_not have_link "fake title 20"
+        expect(page).to have_link "fake title 10"
+      end
+
+      it "allows the user to change the number of articles displayed" do
+        (1..20).each do |i|
+          Article.create(
+            title: "fake title #{i}",
+            body: "fake body",
+            user: user
+          )
+        end
+
+        visit root_path
+
+        expect(page).to have_content "Displaying articles 1 - 10 of 21 in total"
+
+        select('50', from: 'limit')
+        click_button "Change Density"
+
+        expect(page).to have_content "Displaying all 21 articles"
+      end
     end
   end
 
