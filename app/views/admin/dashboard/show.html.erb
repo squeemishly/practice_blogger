@@ -1,10 +1,12 @@
 <h1>Admin Dashboard</h1>
 
-<h3>Find a User by Username</h3>
-<%= form_tag(admin_dashboard_path(current_user), method: :get) do %>
-  <%= text_field_tag(:user_search, params[:search]) %>
-  <%= submit_tag "Find User" %>
-<% end %>
+<div class="find-user">
+  <h3>Find a User by Username</h3>
+  <%= form_tag(admin_dashboard_path(current_user), method: :get) do %>
+    <%= text_field_tag(:user_search, params[:search]) %>
+    <%= submit_tag "Find User", class: "btn btn-submit" %>
+  <% end %>
+</div>
 
 <ul>
   <% if @users %>

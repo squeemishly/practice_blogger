@@ -1,10 +1,10 @@
 <h1>Articles Index</h1>
 
-<div>
+<div class="display-density">
   <h3>Choose Article Display Density:</h3>
   <%= form_tag articles_path, method: :get do %>
-    <%= select_tag :limit, options_for_select([10, 20, 50, 100], selected: params[:limit] || 10) %>
-    <%= submit_tag "Change Density" %>
+    <%= select_tag :limit, options_for_select([10, 20, 50, 100], selected: params[:limit] || 10), class: "dropdown" %>
+    <%= submit_tag "Change Density", class: "btn btn-submit" %>
   <% end %>
 </div>
 
