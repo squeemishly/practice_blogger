@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_one_attached :avatar
   has_many :articles, dependent: :destroy
 
   validates :username, presence: true, uniqueness: true
