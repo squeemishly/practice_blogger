@@ -9,6 +9,8 @@
     Member since: <%= @user.created_at.strftime("%m/%d/%Y") %>
   </div>
 
+  <%= image_tag("https://s3.us-east-2.amazonaws.com/practice-blog-pix/user-avatars/+#{@user.username}.png") %>
+
   <%= link_to "Update Profile Information", edit_user_path(@user.id) %>
 <% end %>
 
