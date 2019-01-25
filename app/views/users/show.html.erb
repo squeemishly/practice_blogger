@@ -9,7 +9,7 @@
     Member since: <%= @user.created_at.strftime("%m/%d/%Y") %>
   </div>
 
-  <%= image_tag(url_for(@user.avatar)) %>
+  <%= image_tag(@user.user_avatar(@user), class: "avatar") %>
 
   <%= link_to "Update Profile Information", edit_user_path(@user.id) %>
 <% end %>

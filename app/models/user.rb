@@ -11,4 +11,12 @@ class User < ApplicationRecord
   has_secure_password
 
   enum role: [:default, :admin]
+
+  def user_avatar(current_user)
+    if current_user.avatar.attached?
+      url_for(current_user.avatar)
+    else
+      'default_avatar.png'
+    end
+  end
 end
