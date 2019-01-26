@@ -13,7 +13,7 @@
     </div>
   <% else %>
     <div class="user-login">
-      <%= link_to "Login", login_path, class: "nav-link user-login" %> or <%= link_to "Create an Account", new_user_path, class: "nav-link user-login" %> to contribute
+      <%= link_to "Login", login_path, class: "nav-link user-login" %> <%= link_to "Create an Account", new_user_path, class: "nav-link user-login" %>
     </div>
   <% end %>
 </nav>
