@@ -27,12 +27,13 @@ admin = User.create(
 admin.avatar.attach(io: File.open("app/assets/images/#{pic}"), filename: pic)
 puts "admin avatar attached?: #{admin.avatar.attached?}"
 
-10.times do
+20.times do
   pic = photos.sample
+  name = Faker::FunnyName.unique.two_word_name.split("")
   user = User.create!(
-    first_name: Faker::Name.first_name,
-    last_name: Faker::Name.last_name,
-    username: Faker::Cat.unique.name,
+    first_name: name.first,
+    last_name: name.last,
+    username: Faker::Pokemon.unique.name,
     email: Faker::Internet.unique.email,
     password: "Password1!"
   )
@@ -45,7 +46,7 @@ puts "admin avatar attached?: #{admin.avatar.attached?}"
   puts "#{user.username} has been created with image #{pic}!"
 end
 
-20.times do
+25.times do
   user = users.sample
 
   article = Article.create(
@@ -59,7 +60,21 @@ end
   puts "#{article.title} was created by #{user.username}!"
 end
 
-20.times do
+25.times do
+  user = users.sample
+
+  article = Article.create(
+    title: Faker::Hipster.sentence(2),
+    body: Faker::ChuckNorris.unique.fact,
+    user: user
+  )
+
+  articles << article
+
+  puts "#{article.title} was created by #{user.username}!"
+end
+
+25.times do
   user = users.sample
 
   article = Article.create(
@@ -73,21 +88,7 @@ end
   puts "#{article.title} was created by #{user.username}!"
 end
 
-20.times do
-  user = users.sample
-
-  article = Article.create(
-    title: Faker::StarWars.unique.quote,
-    body: Faker::ChuckNorris.unique.fact,
-    user: user
-  )
-
-  articles << article
-
-  puts "#{article.title} was created by #{user.username}!"
-end
-
-100.times do
+150.times do
   user = users.sample
   article = articles.sample
 
