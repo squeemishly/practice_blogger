@@ -10,7 +10,7 @@
 
 <ul>
   <% @articles.each do |article| %>
-    <li><%= link_to article.title, article_path(article.id) %> by <%= link_to article.user.username, user_path(article.user.id) %></li>
+    <li><strong><%= link_to article.title, article_path(article.id) %></strong> written by: <strong><%= link_to article.user.username, user_path(article.user.id) %></strong></li>
   <% end %>
 </ul>
 

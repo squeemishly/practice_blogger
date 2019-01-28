@@ -1,22 +1,32 @@
 <h1><%= @user.username %> Profile Page</h1>
 
-<% if @user.id == current_user.id || current_admin? %>
-  <h3>Information:</h3>
-  <div>
-    Name: <%= @user.first_name %> <%= @user.last_name %>
-    Username: <%= @user.username %>
-    Email: <%= @user.email %>
-    Member since: <%= @user.created_at.strftime("%m/%d/%Y") %>
-  </div>
-
-  <%= image_tag(@user.user_avatar(@user), class: "avatar") %>
-
-  <%= link_to "Update Profile Information", edit_user_path(@user.id) %>
+<% if @user.avatar.attached? %>
+  <%= image_tag(url_for(@user.avatar), class: "avatar") %>
+<% else %>
+    <%= image_tag('default_avatar.png', class: "avatar") %>
 <% end %>
 
-<h3>Articles by <%= @user.username %></h3>
-<ul>
-  <% @user.articles.each do |article| %>
-    <li><%= link_to article.title, article_path(article.id) %>
-  <% end %>
-</ul>
+<% if current_user && (@user.id == current_user.id || current_admin?) %>
+
+  <h3>Information:</h3>
+  <div>
+    Name: <%= @user.first_name %> <%= @user.last_name %> <br />
+    Username: <%= @user.username %> <br />
+    Email: <%= @user.email %> <br />
+    Member since: <%= @user.created_at.strftime("%m/%d/%Y") %> <br />
+  </div>
+  <br />
+
+  <%= button_to "Update Profile Information", edit_user_path(@user.id), class: "btn update-information" %>
+<% end %>
+
+<% if @user.articles.first %>
+  <h2>Articles by <%= @user.username %></h2>
+  <ul>
+    <% @user.articles.each do |article| %>
+      <li><%= link_to article.title, article_path(article.id) %>
+    <% end %>
+  </ul>
+<% else %>
+  <h2> No artilces have been written by <%= @user.username %> yet</h2>
+<% end %>
