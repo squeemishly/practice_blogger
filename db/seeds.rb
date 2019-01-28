@@ -29,7 +29,7 @@ puts "admin avatar attached?: #{admin.avatar.attached?}"
 
 20.times do
   pic = photos.sample
-  name = Faker::FunnyName.unique.two_word_name.split("")
+  name = Faker::FunnyName.unique.two_word_name.split(" ")
   user = User.create!(
     first_name: name.first,
     last_name: name.last,
