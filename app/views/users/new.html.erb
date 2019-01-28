@@ -1,23 +1,26 @@
 <h1>Create an Account</h1>
 
-  <%= form_for(@user) do |f| %>
+<%= form_for(@user, html: { class: "form user-form" }) do |f| %>
 
-    <%= f.label :first_name %>
-    <%= f.text_field :first_name %>
+  <%= f.label :first_name %>
+  <%= f.text_field :first_name %>
 
-    <%= f.label :last_name %>
-    <%= f.text_field :last_name %><br>
+  <%= f.label :last_name %>
+  <%= f.text_field :last_name %><br>
 
-    <%= f.label :username %>
-    <%= f.text_field :username %>
+  <%= f.label :username %>
+  <%= f.text_field :username %>
 
-    <%= f.label :password %>
-    <%= f.password_field :password %>
+  <%= f.label :password %>
+  <%= f.password_field :password %>
 
-    <%= f.label :email %>
-    <%= f.text_field :email %><br>
+  <%= f.label :email %>
+  <%= f.text_field :email %><br>
 
-    <%= f.file_field :avatar %>
+  <%= f.label "Profile Picture" %>
+  <%= f.file_field :avatar %>
 
-    <%= f.submit "Create Account" %>
-  <% end %>
+  <div>
+    <%= f.submit "Create Account", class: "btn" %>
+  </div>
+<% end %>

@@ -1,8 +1,10 @@
-<%= form_for [@article, @comment] do |f| %>
+<%= form_for([@article, @comment], html: { class: "form" }) do |f| %>
 
   <%= f.label :body %>
-  <%= f.text_area :body %><br>
+  <%= f.text_area :body, class: "text-body" %><br>
 
-  <%= f.submit "Share Your Thoughts!", class: "btn btn-submit" %>
+  <div>
+    <%= f.submit "Share Your Thoughts!", class: "btn btn-submit" %>
+  </div>
 
 <% end %>

@@ -1,6 +1,6 @@
 <h1>Edit <%= @user.username %> Profile</h1>
 
-<%= form_for(@user) do |f| %>
+<%= form_for(@user, html: { class: "form user-form" }) do |f| %>
 
   <%= f.label :first_name %>
   <%= f.text_field :first_name %>
@@ -11,10 +11,16 @@
   <%= f.label :username %>
   <%= f.text_field :username %>
 
+  <%= f.label :password %>
+  <%= f.password_field :password %>
+
   <%= f.label :email %>
   <%= f.text_field :email %><br>
 
+  <%= f.label "Profile Picture:" %>
   <%= f.file_field :avatar %>
 
-  <%= f.submit "Update" %>
+  <div>
+    <%= f.submit "Update", class: "btn" %>
+  </div>
 <% end %>

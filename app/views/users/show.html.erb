@@ -17,7 +17,7 @@
   </div>
   <br />
 
-  <%= button_to "Update Profile Information", edit_user_path(@user.id), class: "btn update-information" %>
+  <%= button_to "Update Profile Information", edit_user_path(@user.id), class: "btn update-information", method: "get" %>
 <% end %>
 
 <% if @user.articles.first %>
