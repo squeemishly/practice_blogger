@@ -1,4 +1,4 @@
-<h1>Articles Index</h1>
+<h1>All Articles</h1>
 
 <div class="display-density">
   <h3>Choose Article Display Density:</h3>
@@ -8,11 +8,34 @@
   <% end %>
 </div>
 
-<ul>
+<table>
+  <tr>
+    <th>
+      Written By
+    </th>
+    <th>
+      Article Title
+    </th>
+    <th>
+      Created On
+    </th>
+  </tr>
   <% @articles.each do |article| %>
-    <li><strong><%= link_to article.title, article_path(article.id) %></strong> written by: <strong><%= link_to article.user.username, user_path(article.user.id) %></strong></li>
+    <tr>
+      <td>
+        <%= image_tag(url_for(article.user.avatar), class:"article-author-image") %><br/>
+        <%= link_to article.user.username, user_path(article.user.id) %>
+      </td>
+      <td>
+        <%= link_to article.title, article_path(article.id) %>
+      </td>
+      <td>
+        <%= article.created_at.strftime("%m/%d/%Y") %>
+      </td>
+    </tr>
   <% end %>
-</ul>
+</table>
+<br/>
 
 <%= paginate @articles %>
 <%= page_entries_info @articles, entry_name: 'article' %>
