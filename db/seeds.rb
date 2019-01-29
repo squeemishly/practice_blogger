@@ -1,6 +1,7 @@
 users = []
 articles = []
 photos = [
+  "black-widow.jpg",
   "boomer.jpg",
   "buffy.jpg",
   "captain-georgiou.jpg",
@@ -8,6 +9,7 @@ photos = [
   "michael-burnham.jpg",
   "Rain-Ocampo.jpg",
   "shuri.jpg",
+  "valkyrie.jpg",
   "wonder-woman.jpg",
   "xena.jpg",
   "zoe.jpg"
