@@ -1,45 +1,60 @@
 <h1><%= @article.title %></h1>
 
-<div>
-  <%= @article.body %>
+<div class="article-content">
+  <div class="article-body">
+    <%= @article.body %>
+  </div>
+
+  <div>
+    written by: <%= @article.user.username %>
+  </div>
 </div>
 
-<div>
-  written by: <%= @article.user.username %>
-</div>
-
+<div class="article-options-links">
 <% if current_user && current_user.id == @article.user.id %>
-  <%= link_to "Edit Post", edit_article_path(@article.id) %>
+  <%= button_to "Edit Post", edit_article_path(@article.id), class: "btn article-button", method: :get %>
 <% end %>
 
 <% if (current_user && (current_user.id == @article.user.id || current_admin?)) %>
-  <%= link_to "Delete Post", article_path(@article.id), method: :delete %>
+  <%= button_to "Delete Post", article_path(@article.id), class: "btn article-button", method: :delete %>
 <% end %>
 
 <% if current_user %>
-  <%= link_to "Add a Comment", new_article_comment_path(@article.id) %>
+  <%= button_to "Add a Comment", new_article_comment_path(@article.id), class: "btn article-button", method: :get %>
 <% end %>
+</div>
 
 <div>
   <%= link_to "Return Home", root_path %>
 </div>
 
-<h3>Comments</h3>
+<h2>Comments</h2>
 
-<% @comments.each do |comment| %>
-  <div>
-    <%= comment.body %></br>
-    Contributed By: <%= comment.user.username %><br />
-    <%= comment.created_at.strftime("Posted: %m/%d/%Y") %><br />
-    <% if current_user && (current_user == @article.user || current_user == comment.user || current_admin?) %>
-      <%= link_to "Delete Comment", article_comment_path(@article, comment), method: :delete %>
-    <% end %>
+<table class="article-comments">
+  <% @comments.each do |comment| %>
+    <tr>
+      <td class="commentor">
+        <% if comment.user.avatar.attached? %>
+          <%= image_tag(url_for(comment.user.avatar), class: "comment-avatar") %>
+        <% end %>
+        <%= link_to comment.user.username, user_path(comment.user) %>
+      </td>
+      <td>
+        <%= comment.body %></br>
+        <%= comment.created_at.strftime("Posted: %m/%d/%Y") %><br />
+        <div class="comments-options-buttons">
+          <% if current_user && (current_user == @article.user || current_user == comment.user || current_admin?) %>
+            <%= button_to "Delete Comment", article_comment_path(@article, comment), class: "btn comments-option", method: :delete %>
+          <% end %>
 
-    <% if current_user == comment.user %>
-      <%= link_to "Edit Comment", edit_article_comment_path(@article, comment) %>
-    <% end %>
-  </div><br />
-<% end %>
+          <% if current_user == comment.user %>
+            <%= button_to "Edit Comment", edit_article_comment_path(@article, comment), class: "btn comments-option", method: :get %>
+          <% end %>
+        </div>
+      </td>
+    </tr>
+  <% end %>
+</table>
 
 <%= paginate @comments %>
 <%= page_entries_info @comments, entry_name: 'comment' %>
