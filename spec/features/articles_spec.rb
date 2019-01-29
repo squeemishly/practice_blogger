@@ -118,8 +118,8 @@ describe "Articles pages" do
 
         expect(page).to have_content article.title
         expect(page).to have_content article.body
-        expect(page).to have_content "Edit Post"
-        expect(page).to have_content "Delete Post"
+        expect(page).to have_button "Edit Post"
+        expect(page).to have_button "Delete Post"
       end
     end
 
@@ -131,8 +131,8 @@ describe "Articles pages" do
 
         expect(page).to have_content article.title
         expect(page).to have_content article.body
-        expect(page).to_not have_content "Edit Post"
-        expect(page).to have_content "Delete Post"
+        expect(page).to_not have_button "Edit Post"
+        expect(page).to have_button "Delete Post"
       end
     end
   end
@@ -191,7 +191,7 @@ describe "Articles pages" do
 
         visit article_path(article.id)
 
-        click_link "Edit Post"
+        click_button "Edit Post"
         expect(page).to have_current_path(edit_article_path(article.id))
 
         fill_in "article_title", with: "New Fake Title"
@@ -239,7 +239,7 @@ describe "Articles pages" do
 
         visit article_path(article.id)
 
-        click_link "Delete Post"
+        click_button "Delete Post"
 
         expect(page).to have_current_path("/articles")
         expect(page).to_not have_content("Fake Title")
@@ -252,7 +252,7 @@ describe "Articles pages" do
 
         visit article_path(article.id)
 
-        click_link "Delete Post"
+        click_button "Delete Post"
 
         expect(page).to have_current_path("/articles")
         expect(page).to_not have_content("Fake Title")

@@ -80,7 +80,7 @@ describe "Article Comments" do
       visit article_path(article.id)
 
       expect(page).to have_content "Fake Comment 10"
-      expect(page).to have_content "Contributed By: #{rando_user.username}"
+      expect(page).to have_content rando_user.username
       expect(page).to have_content "Displaying comments 1 - 5 of 11 in total"
       expect(page).to_not have_content "Fake Comment 5"
 
@@ -88,14 +88,14 @@ describe "Article Comments" do
       click_on "2"
 
       expect(page).to have_content "Fake Comment 5"
-      expect(page).to have_content "Contributed By: #{rando_user.username}"
+      expect(page).to have_content rando_user.username
       expect(page).to have_content "Displaying comments 6 - 10 of 11 in total"
       expect(page).to_not have_content "Fake Comment 10"
 
       click_on "Next"
 
       expect(page).to have_content "Fake Comment"
-      expect(page).to have_content "Contributed By: #{rando_user.username}"
+      expect(page).to have_content rando_user.username
       expect(page).to have_content "Displaying comment 11 - 11 of 11 in total"
       expect(page).to_not have_content "Fake Comment 10"
       expect(page).to_not have_content "Fake Comment 5"
@@ -117,7 +117,7 @@ describe "Article Comments" do
 
         visit article_path(article.id)
 
-        click_link "Add a Comment"
+        click_button "Add a Comment"
         expect(page).to have_current_path(new_article_comment_path(article.id))
 
         fill_in "comment_body", with: "My New Comment"
@@ -125,7 +125,7 @@ describe "Article Comments" do
 
         expect(page).to have_current_path(article_path(article.id))
         expect(page).to have_content "My New Comment"
-        expect(page).to have_content "Contributed By: #{rando_user.username}"
+        expect(page).to have_content rando_user.username
       end
     end
   end
@@ -145,7 +145,7 @@ describe "Article Comments" do
 
         visit article_path(article.id)
 
-        click_link "Edit Comment"
+        click_button "Edit Comment"
         expect(page).to have_current_path(edit_article_comment_path(article.id, comment.id))
 
         fill_in "comment_body", with: "Totally edited Comment"
@@ -153,7 +153,7 @@ describe "Article Comments" do
 
         expect(page).to have_current_path(article_path(article.id))
         expect(page).to have_content "Totally edited Comment"
-        expect(page).to have_content "Contributed By: #{rando_user.username}"
+        expect(page).to have_content rando_user.username
       end
 
       it "does not show the link to edit another user's comment" do
@@ -203,7 +203,7 @@ describe "Article Comments" do
 
         expect(page).to have_content "Fake Comment"
 
-        click_link "Delete Comment"
+        click_button "Delete Comment"
 
         expect(page).to have_current_path(article_path(article.id))
         expect(page).to_not have_content "Fake Comment"
@@ -226,7 +226,7 @@ describe "Article Comments" do
 
         expect(page).to have_content "Fake Comment"
 
-        click_link "Delete Comment"
+        click_button "Delete Comment"
 
         expect(page).to have_current_path(article_path(article.id))
         expect(page).to_not have_content "Fake Comment"
@@ -241,7 +241,7 @@ describe "Article Comments" do
 
         expect(page).to have_content "Fake Comment"
 
-        click_link "Delete Comment"
+        click_button "Delete Comment"
 
         expect(page).to have_current_path(article_path(article.id))
         expect(page).to_not have_content "Fake Comment"
