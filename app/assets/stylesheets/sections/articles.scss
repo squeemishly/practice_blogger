@@ -2,3 +2,50 @@
   display: flex;
   align-items: center;
 }
+
+.article-content {
+  border-radius: 5px;
+  padding: 10px;
+  background-color: $light;
+
+  .article-body {
+    color: $second-text;
+    font-size: 20px;
+  }
+}
+
+.article-options-links {
+  display: flex;
+
+  .article-button {
+    margin: 5px;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 5px;
+}
+
+tr:nth-child(odd) {
+  background-color: $light;
+}
+
+.commentor {
+  display: flex;
+  flex-direction: column;
+  max-width: 80px;
+  overflow: scroll;
+}
+
+.comments-options-buttons {
+  display: flex;
+
+  .comments-option{
+    margin: 0 5px;
+  }
+}
