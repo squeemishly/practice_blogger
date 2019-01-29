@@ -24,6 +24,8 @@ admin = User.create(
   role: "admin"
 )
 
+users << admin
+
 admin.avatar.attach(io: File.open("app/assets/images/#{pic}"), filename: pic)
 puts "admin avatar attached?: #{admin.avatar.attached?}"
 
