@@ -10,7 +10,11 @@ class ArticlesController < ApplicationController
   end
 
   def new
-    @article = Article.new
+    if current_user
+      @article = Article.new
+    else
+      render_404
+    end
   end
 
   def create

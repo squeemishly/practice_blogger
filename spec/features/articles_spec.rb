@@ -110,7 +110,7 @@ describe "Articles pages" do
       end
     end
 
-    context "as a user" do
+    context "as the article author" do
       it "does shows and edit and a delete link" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
@@ -120,6 +120,19 @@ describe "Articles pages" do
         expect(page).to have_content article.body
         expect(page).to have_button "Edit Post"
         expect(page).to have_button "Delete Post"
+      end
+    end
+
+    context "as a logged in user, but not the author" do
+      it "does not show an edit or delete link" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
+
+        visit article_path(article.id)
+
+        expect(page).to have_content article.title
+        expect(page).to have_content article.body
+        expect(page).to_not have_content "Edit Post"
+        expect(page).to_not have_content "Delete Post"
       end
     end
 
@@ -144,6 +157,10 @@ describe "Articles pages" do
 
         expect(page).to_not have_content "Write New Blog Post"
         expect(page).to have_content "Login"
+
+        visit new_article_path
+
+        expect(page).to have_content "The page you were looking for doesn't exist."
       end
 
     end
@@ -155,13 +172,15 @@ describe "Articles pages" do
         visit root_path
         click_on "Write New Blog Post"
 
-        expect(page).to have_current_path "/articles/new"
+        expect(page).to have_current_path new_article_path
 
         fill_in "article_title", with: "Fake Title"
         fill_in "article_body", with: "Fake Body"
         click_button "Add Your Thoughts!"
 
+        expect(page).to have_current_path "/articles/#{Article.last.id}"
         expect(page).to have_css("h1", text: "Fake Title")
+        expect(page).to have_content("Fake Body")
       end
     end
   end
@@ -169,9 +188,13 @@ describe "Articles pages" do
   describe "edit an article" do
     context "as a visitor" do
       it "does not see the links to edit" do
-        visit article_path(article.id)
+        visit article_path(article)
 
         expect(page).to_not have_link "Edit Post"
+
+        visit edit_article_path(article)
+
+        expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
 
@@ -179,26 +202,13 @@ describe "Articles pages" do
       it "does not see the links to edit" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
 
-        visit article_path(article.id)
+        visit article_path(article)
 
         expect(page).to_not have_link "Edit Post"
-      end
-    end
 
-    context "as the writer of the article" do
-      it "uses the links to edit and update" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        visit edit_article_path(article)
 
-        visit article_path(article.id)
-
-        click_button "Edit Post"
-        expect(page).to have_current_path(edit_article_path(article.id))
-
-        fill_in "article_title", with: "New Fake Title"
-        click_button "Add Your Thoughts!"
-
-        expect(page).to have_current_path(article_path(article.id))
-        expect(page).to have_css("h1", text: "New Fake Title")
+        expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
 
@@ -206,38 +216,62 @@ describe "Articles pages" do
       it "does not see the links to edit" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
 
-        visit article_path(article.id)
+        visit article_path(article)
 
         expect(page).to_not have_link "Edit Post"
+
+        visit edit_article_path(article)
+
+        expect(page).to have_content "The page you were looking for doesn't exist."
+      end
+    end
+
+    context "as the writer of the article" do
+      it "uses the links to edit and update" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+
+        visit article_path(article)
+
+        expect(page).to have_css("h1", text: "Fake Title")
+        click_button "Edit Post"
+        expect(page).to have_current_path edit_article_path(article)
+
+        fill_in "article_title", with: "New Fake Title"
+        click_button "Add Your Thoughts!"
+
+        expect(page).to have_current_path article_path(article)
+        expect(page).to have_css("h1", text: "New Fake Title")
+        expect(page).to have_content "Fake Body"
       end
     end
   end
 
   describe "delete an article" do
-    context "as a visitor" do
+    context "a visitor" do
       it "does not have the Delete Post link" do
-        visit article_path(article.id)
+        visit article_path(article)
 
         expect(page).to_not have_link "Delete Post"
       end
     end
 
-    context "as a user who did not write the article" do
+    context "a user who did not write the article" do
       it "does not have the Delete Post link" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
 
-        visit article_path(article.id)
+        visit article_path(article)
 
         expect(page).to_not have_link "Delete Post"
       end
 
     end
 
-    context "as the writer of the article" do
+    context "a user who is the writer of the article" do
       it "can delete the article" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
-        visit article_path(article.id)
+        visit article_path(article)
+        expect(page).to have_content("Fake Title")
 
         click_button "Delete Post"
 
@@ -246,12 +280,13 @@ describe "Articles pages" do
       end
     end
 
-    context "as a site admin" do
+    context "a site admin" do
       it "can delete the article" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
 
-        visit article_path(article.id)
-
+        visit article_path(article)
+        expect(page).to have_content("Fake Title")
+        
         click_button "Delete Post"
 
         expect(page).to have_current_path("/articles")

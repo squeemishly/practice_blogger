@@ -23,7 +23,9 @@
   <% @articles.each do |article| %>
     <tr>
       <td>
-        <%= image_tag(url_for(article.user.avatar), class:"article-author-image") %><br/>
+        <% if article.user.avatar.attached? %>
+          <%= image_tag(url_for(article.user.avatar), class:"article-author-image") %><br/>
+        <% end %>
         <%= link_to article.user.username, user_path(article.user.id) %>
       </td>
       <td>
