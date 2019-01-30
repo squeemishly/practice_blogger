@@ -3,7 +3,11 @@ class CommentsController < ApplicationController
   before_action :determine_comment, only: [:edit, :update, :destroy]
 
   def new
-    @comment = Comment.new
+    if current_user
+      @comment = Comment.new
+    else
+      render_404
+    end
   end
 
   def create
@@ -51,9 +55,5 @@ class CommentsController < ApplicationController
 
     def determine_comment
       @comment = Comment.find(params[:id])
-    end
-
-    def render_404
-      render file: "/public/404", status: 404
     end
 end
