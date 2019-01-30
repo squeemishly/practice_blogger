@@ -43,7 +43,7 @@ class ArticlesController < ApplicationController
 
   def destroy
     if @article.user == current_user || current_admin?
-      Article.delete(params[:id])
+      Article.destroy(params[:id])
       redirect_to articles_path
     else
       render_404
