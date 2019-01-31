@@ -13,7 +13,7 @@ class ArticlesController < ApplicationController
     if current_user
       @article = Article.new
     else
-      render_404
+      render_403
     end
   end
 
@@ -29,7 +29,7 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    render_404 unless @article.user == current_user
+    render_403 unless @article.user == current_user
   end
 
   def update
@@ -37,7 +37,7 @@ class ArticlesController < ApplicationController
       @article.update!(article_params)
       redirect_to article_path(@article.id)
     else
-      render_404
+      render_403
     end
   end
 
@@ -46,7 +46,7 @@ class ArticlesController < ApplicationController
       Article.destroy(params[:id])
       redirect_to articles_path
     else
-      render_404
+      render_403
     end
   end
 

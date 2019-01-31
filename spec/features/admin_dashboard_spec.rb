@@ -44,13 +44,13 @@ describe "Admin Dashboard" do
       it "is not allowed to see the admin dashboard" do
         visit admin_dashboard_path(admin)
 
-        expect(page.status_code).to eq 404
-        expect(page).to have_content "The page you were looking for doesn't exist."
+        expect(page.status_code).to eq 403
+        expect(page).to have_content "You are not authorized to enter this area."
 
         visit admin_dashboard_path(user)
 
-        expect(page.status_code).to eq 404
-        expect(page).to have_content "The page you were looking for doesn't exist."
+        expect(page.status_code).to eq 403
+        expect(page).to have_content "You are not authorized to enter this area."
       end
     end
 

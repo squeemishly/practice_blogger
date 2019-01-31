@@ -28,7 +28,7 @@ class UsersController < ApplicationController
       @user.update!(user_params)
       redirect_to user_path(@user.id)
     else
-      render file: "/public/404", status: 404
+      render_403
     end
   end
 

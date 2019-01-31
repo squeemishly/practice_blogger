@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
     current_user && current_user.admin?
   end
 
-  def render_404
-    render file: "/public/404", status: 404
+  def render_403
+    render file: "/public/403", status: 403
   end
 end

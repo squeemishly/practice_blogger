@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
     if current_user
       @comment = Comment.new
     else
-      render_404
+      render_403
     end
   end
 
@@ -26,12 +26,12 @@ class CommentsController < ApplicationController
       Comment.delete(params[:id])
       redirect_to article_path(@article)
     else
-      render_404
+      render_403
     end
   end
 
   def edit
-    render_404 unless @comment.user == current_user
+    render_403 unless @comment.user == current_user
   end
 
   def update
@@ -39,7 +39,7 @@ class CommentsController < ApplicationController
       @comment.update(comment_params)
       redirect_to article_path(@article)
     else
-      render_404
+      render_403
     end
   end
 

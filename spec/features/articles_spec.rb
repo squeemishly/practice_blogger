@@ -44,6 +44,8 @@ describe "Articles pages" do
     end
 
     user.delete
+    admin.delete
+    rando_user.delete
   end
 
   describe "article index" do
@@ -160,8 +162,8 @@ describe "Articles pages" do
 
         visit new_article_path
 
-        expect(page.status_code).to eq 404
-        expect(page).to have_content "The page you were looking for doesn't exist."
+        expect(page.status_code).to eq 403
+        expect(page).to have_content "You are not authorized to enter this area."
       end
 
     end
@@ -195,8 +197,8 @@ describe "Articles pages" do
 
         visit edit_article_path(article)
 
-        expect(page.status_code).to eq 404
-        expect(page).to have_content "The page you were looking for doesn't exist."
+        expect(page.status_code).to eq 403
+        expect(page).to have_content "You are not authorized to enter this area."
       end
     end
 
@@ -210,8 +212,8 @@ describe "Articles pages" do
 
         visit edit_article_path(article)
 
-        expect(page.status_code).to eq 404
-        expect(page).to have_content "The page you were looking for doesn't exist."
+        expect(page.status_code).to eq 403
+        expect(page).to have_content "You are not authorized to enter this area."
       end
     end
 
@@ -225,8 +227,8 @@ describe "Articles pages" do
 
         visit edit_article_path(article)
 
-        expect(page.status_code).to eq 404
-        expect(page).to have_content "The page you were looking for doesn't exist."
+        expect(page.status_code).to eq 403
+        expect(page).to have_content "You are not authorized to enter this area."
       end
     end
 
