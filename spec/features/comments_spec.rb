@@ -77,7 +77,7 @@ describe "Article Comments" do
         )
       end
 
-      visit article_path(article.id)
+      visit article_path(article)
 
       expect(page).to have_content "Fake Comment 10"
       expect(page).to have_content rando_user.username
@@ -103,27 +103,29 @@ describe "Article Comments" do
   end
 
   describe "add a comment to an article" do
-    context "as a visitor" do
+    context "a visitor" do
       it "does not show the link to add a comment" do
-        visit article_path(article.id)
-
+        visit article_path(article)
         expect(page).to_not have_content "Add a Comment"
+
+        visit new_article_comment_path(article)
+        expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
 
-    context "as a user" do
+    context "a user" do
       it "allows the user to add a comment" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
 
-        visit article_path(article.id)
+        visit article_path(article)
 
         click_button "Add a Comment"
-        expect(page).to have_current_path(new_article_comment_path(article.id))
+        expect(page).to have_current_path new_article_comment_path(article)
 
         fill_in "comment_body", with: "My New Comment"
         click_button "Share Your Thoughts!"
 
-        expect(page).to have_current_path(article_path(article.id))
+        expect(page).to have_current_path article_path(article)
         expect(page).to have_content "My New Comment"
         expect(page).to have_content rando_user.username
       end
@@ -131,119 +133,123 @@ describe "Article Comments" do
   end
 
   describe "edit a comment" do
-    context "as a visitor" do
+    context "a visitor" do
       it "does not show the link to edit the comment" do
-        visit article_path(article.id)
-
+        visit article_path(article)
         expect(page).to_not have_content "Edit Comment"
+
+        visit edit_article_comment_path(article, comment)
+        expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
 
-    context "as a random user" do
+    context "a random user" do
       it "shows the link to edit their comment" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
 
-        visit article_path(article.id)
+        visit article_path(article)
+
+        expect(page).to have_content "Fake Comment"
 
         click_button "Edit Comment"
-        expect(page).to have_current_path(edit_article_comment_path(article.id, comment.id))
+        expect(page).to have_current_path edit_article_comment_path(article, comment)
 
         fill_in "comment_body", with: "Totally edited Comment"
         click_button "Share Your Thoughts!"
 
-        expect(page).to have_current_path(article_path(article.id))
+        expect(page).to have_current_path article_path(article)
         expect(page).to have_content "Totally edited Comment"
-        expect(page).to have_content rando_user.username
+        expect(page).to_not have_content "Fake Comment"
       end
 
       it "does not show the link to edit another user's comment" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(diff_user)
 
-        visit article_path(article.id)
-
+        visit article_path(article)
         expect(page).to_not have_content "Edit Comment"
+
+        visit edit_article_comment_path(article, comment)
+        expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
 
-    context "as the writer of the article" do
+    context "the writer of the article" do
       it "does not show the link to edit another user's comment" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
-        visit article_path(article.id)
-
+        visit article_path(article)
         expect(page).to_not have_content "Edit Comment"
+
+        visit edit_article_comment_path(article, comment)
+        expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
 
-    context "as the site admin" do
+    context "the site admin" do
       it "does not show the link to edit another user's comment" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
 
-        visit article_path(article.id)
-
+        visit article_path(article)
         expect(page).to_not have_content "Edit Comment"
+
+        visit edit_article_comment_path(article, comment)
+        expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
   end
 
   describe "delete a comment" do
-    context "as a visitor" do
+    context "a visitor" do
       it "does not show the link to delete the comment" do
-        visit article_path(article.id)
+        visit article_path(article)
 
         expect(page).to_not have_content "Delete Comment"
       end
     end
 
-    context "as a random user" do
+    context "a random user" do
       it "shows the link to delete their own comment" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
 
-        visit article_path(article.id)
-
+        visit article_path(article)
         expect(page).to have_content "Fake Comment"
-
         click_button "Delete Comment"
 
-        expect(page).to have_current_path(article_path(article.id))
+        expect(page).to have_current_path article_path(article)
         expect(page).to_not have_content "Fake Comment"
       end
 
       it "does not show the link to delete another user's comment" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(diff_user)
 
-        visit article_path(article.id)
+        visit article_path(article)
 
         expect(page).to_not have_content "Delete Comment"
       end
     end
 
-    context "as the writer of the article" do
-      it "shows the link to delete any comment" do
+    context "the writer of the article" do
+      it "allows the user to delete any comment" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
-        visit article_path(article.id)
-
+        visit article_path(article)
         expect(page).to have_content "Fake Comment"
-
         click_button "Delete Comment"
 
-        expect(page).to have_current_path(article_path(article.id))
+        expect(page).to have_current_path article_path(article)
         expect(page).to_not have_content "Fake Comment"
       end
     end
 
-    context "as the site admin" do
+    context "the site admin" do
       it "shows the link to delete any comment" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
 
-        visit article_path(article.id)
-
+        visit article_path(article)
         expect(page).to have_content "Fake Comment"
-
         click_button "Delete Comment"
 
-        expect(page).to have_current_path(article_path(article.id))
+        expect(page).to have_current_path article_path(article)
         expect(page).to_not have_content "Fake Comment"
       end
     end
