@@ -6,9 +6,9 @@ describe "Nav Bars" do
       it "contains home, login, and create account links" do
         visit root_path
 
-        expect(page).to have_link "Return Home"
-        expect(page).to have_link "Login"
-        expect(page).to have_link "Create an Account"
+        expect(page).to have_link("Return Home", href: root_path)
+        expect(page).to have_link("Login", href: login_path)
+        expect(page).to have_link("Create an Account", href: new_user_path)
       end
     end
 
@@ -27,10 +27,10 @@ describe "Nav Bars" do
 
         visit root_path
 
-        expect(page).to have_link "Return Home"
-        expect(page).to have_link "Write New Blog Post"
-        expect(page).to have_link "#{user.username} profile"
-        expect(page).to have_link "Logout"
+        expect(page).to have_link("Return Home", href: root_path)
+        expect(page).to have_link("Write New Blog Post", href: new_article_path)
+        expect(page).to have_link("#{user.username} profile", href: user_path(user))
+        expect(page).to have_link("Logout", href: logout_path)
       end
     end
 
@@ -49,11 +49,11 @@ describe "Nav Bars" do
 
         visit root_path
 
-        expect(page).to have_link "Return Home"
-        expect(page).to have_link "Dashboard"
-        expect(page).to have_link "Write New Blog Post"
-        expect(page).to have_link "#{admin.username} profile"
-        expect(page).to have_link "Logout"
+        expect(page).to have_link("Return Home", href: root_path)
+        expect(page).to have_link("Dashboard", href: admin_dashboard_path(admin))
+        expect(page).to have_link("Write New Blog Post", href: new_article_path)
+        expect(page).to have_link("#{admin.username} profile", href: user_path(admin))
+        expect(page).to have_link("Logout", href: logout_path)
       end
     end
   end
@@ -95,7 +95,7 @@ describe "Nav Bars" do
       fill_in "article_search", with: "fake"
       click_button "Search"
 
-      expect(page).to have_link article.title
+      expect(page).to have_link(article.title, href: article_path(article))
       expect(page).to have_content user.username
       expect(page).to_not have_link rando_article.title
       expect(page).to_not have_content rando_user.username

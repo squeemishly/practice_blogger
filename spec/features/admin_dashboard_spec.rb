@@ -93,12 +93,9 @@ describe "Admin Dashboard" do
       fill_in "user_search", with: "fake"
       click_button "Find User"
 
-      expect(page).to have_link user.username
-      expect(page).to have_link user2.username
+      expect(page).to have_link(user.username, href: user_path(user))
+      expect(page).to have_link(user2.username, href: user_path(user2))
       expect(page).to_not have_link user3.username
-
-      click_on user.username
-      expect(page).to have_current_path user_path(user)
     end
   end
 end
