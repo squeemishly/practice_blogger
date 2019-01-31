@@ -40,22 +40,28 @@ describe "Admin Dashboard" do
   end
 
   describe "access" do
-    context "as a user" do
-      it "does not allow the user to see the admin dashboard" do
-        visit admin_dashboard_path(admin.id)
+    context "a user" do
+      it "is not allowed to see the admin dashboard" do
+        visit admin_dashboard_path(admin)
 
         expect(page.status_code).to eq 404
+        expect(page).to have_content "The page you were looking for doesn't exist."
+
+        visit admin_dashboard_path(user)
+
+        expect(page.status_code).to eq 404
+        expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
 
-    context "as an admin" do
-      it "allows the admin to access the admin dashboard" do
+    context "an admin" do
+      it "is allowed to access the admin dashboard" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
 
-        visit admin_dashboard_path(admin.id)
+        visit admin_dashboard_path(admin)
 
         expect(page.status_code).to eq 200
-        expect(page).to have_current_path "/admin/dashboard/#{admin.id}"
+        expect(page).to have_current_path admin_dashboard_path(admin)
       end
     end
   end
@@ -82,7 +88,7 @@ describe "Admin Dashboard" do
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
 
-      visit admin_dashboard_path(admin.id)
+      visit admin_dashboard_path(admin)
 
       fill_in "user_search", with: "fake"
       click_button "Find User"
@@ -92,7 +98,7 @@ describe "Admin Dashboard" do
       expect(page).to_not have_link user3.username
 
       click_on user.username
-      expect(page).to have_current_path "/users/#{user.id}"
+      expect(page).to have_current_path user_path(user)
     end
   end
 end
