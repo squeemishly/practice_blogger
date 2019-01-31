@@ -27,6 +27,14 @@ RSpec.describe Comment, type: :model do
           body: "fake body",
           user: user
       )
+
+      (1..3).each do |i|
+        Comment.create(
+          body: "fake comment #{i}",
+          article: article,
+          user: user
+        )
+      end
     end
 
     after(:each) do
@@ -57,18 +65,18 @@ RSpec.describe Comment, type: :model do
     end
 
     context ".comments_to_display" do
-      it "returns 5 comments for the article" do
-        (1..3).each do |i|
-          Comment.create(
-            body: "fake comment #{i}",
-            article: article,
-            user: user
-          )
-        end
-
-        comments = Comment.comments_to_display(article, 1, 2)
+      it "returns the 5 most recent comments by default" do
+        comments = Comment.comments_to_display(article, nil, 2)
         comment_bodies = comments.map { |comment| comment.body }
         expected = ["fake comment 3", "fake comment 2"]
+
+        expect(comment_bodies).to eq expected
+      end
+
+      it "returns the correct comments for the page number" do
+        comments = Comment.comments_to_display(article, 2, 2)
+        comment_bodies = comments.map { |comment| comment.body }
+        expected = ["fake comment 1"]
 
         expect(comment_bodies).to eq expected
       end
