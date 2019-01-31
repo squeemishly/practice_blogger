@@ -109,6 +109,7 @@ describe "Article Comments" do
         expect(page).to_not have_content "Add a Comment"
 
         visit new_article_comment_path(article)
+        expect(page.status_code).to eq 404
         expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
@@ -139,6 +140,7 @@ describe "Article Comments" do
         expect(page).to_not have_content "Edit Comment"
 
         visit edit_article_comment_path(article, comment)
+        expect(page.status_code).to eq 404
         expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
@@ -169,6 +171,7 @@ describe "Article Comments" do
         expect(page).to_not have_content "Edit Comment"
 
         visit edit_article_comment_path(article, comment)
+        expect(page.status_code).to eq 404
         expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
@@ -181,6 +184,7 @@ describe "Article Comments" do
         expect(page).to_not have_content "Edit Comment"
 
         visit edit_article_comment_path(article, comment)
+        expect(page.status_code).to eq 404
         expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
@@ -193,6 +197,7 @@ describe "Article Comments" do
         expect(page).to_not have_content "Edit Comment"
 
         visit edit_article_comment_path(article, comment)
+        expect(page.status_code).to eq 404
         expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end

@@ -160,6 +160,7 @@ describe "Articles pages" do
 
         visit new_article_path
 
+        expect(page.status_code).to eq 404
         expect(page).to have_content "The page you were looking for doesn't exist."
       end
 
@@ -194,6 +195,7 @@ describe "Articles pages" do
 
         visit edit_article_path(article)
 
+        expect(page.status_code).to eq 404
         expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
@@ -208,6 +210,7 @@ describe "Articles pages" do
 
         visit edit_article_path(article)
 
+        expect(page.status_code).to eq 404
         expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
@@ -222,6 +225,7 @@ describe "Articles pages" do
 
         visit edit_article_path(article)
 
+        expect(page.status_code).to eq 404
         expect(page).to have_content "The page you were looking for doesn't exist."
       end
     end
@@ -286,7 +290,7 @@ describe "Articles pages" do
 
         visit article_path(article)
         expect(page).to have_content("Fake Title")
-        
+
         click_button "Delete Post"
 
         expect(page).to have_current_path("/articles")
