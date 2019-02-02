@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(version: 2019_01_24_170845) do
     t.integer "role", default: 0
   end
 
-  add_foreign_key "articles", "users"
-  add_foreign_key "comments", "articles"
-  add_foreign_key "comments", "users"
+  add_foreign_key "articles", "users", on_delete: :cascade
+  add_foreign_key "comments", "articles", on_delete: :cascade
+  add_foreign_key "comments", "users", on_delete: :cascade
 end
