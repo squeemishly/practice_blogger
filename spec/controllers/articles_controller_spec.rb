@@ -99,12 +99,14 @@ describe ArticlesController do
   context ".create" do
     context "a visitor" do
       it "returns a 403" do
-        post :create, params: {
+        expect{
+           post :create, params: {
                               article: {
                                 title: :fake_title,
                                 body: :fake_body
                               }
                              }
+              }.to change(Article, :count).by 0
 
         expect(response.status).to eq 403
         expect(response).to render_template(file: "#{Rails.root}/public/403.html")
@@ -115,12 +117,15 @@ describe ArticlesController do
       context "when all fields are filled in" do
         it "saves the article and redirects to Article show" do
           allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
-          post :create, params: {
+
+          expect{
+             post :create, params: {
                                 article: {
                                   title: :fake_title,
                                   body: :fake_body
                                 }
                                }
+                }.to change(Article, :count).by 1
 
           expect(response.status).to eq 302
         end
@@ -129,11 +134,13 @@ describe ArticlesController do
       context "when a field is missing" do
         it "returns user to new template" do
           allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
-          post :create, params: {
+          expect{
+             post :create, params: {
                                 article: {
                                   body: :fake_body
                                 }
                                }
+                }.to change(Article, :count).by 0
 
           expect(response.status).to eq 200
           assert_template :new
@@ -251,7 +258,9 @@ describe ArticlesController do
   context ".destroy" do
     context "a visitor" do
       it "returns a 403" do
-        delete :destroy, params: { id: article.id }
+        expect{
+          delete :destroy, params: { id: article.id }
+        }.to change(Article, :count).by 0
 
         expect(response.status).to eq 403
         expect(response).to render_template(file: "#{Rails.root}/public/403.html")
@@ -261,7 +270,9 @@ describe ArticlesController do
     context "an admin" do
       it "deletes the article and redirects to the root path" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
-        delete :destroy, params: { id: article.id }
+        expect{
+          delete :destroy, params: { id: article.id }
+        }.to change(Article, :count).by -1
 
         expect(response.status).to eq 302
         expect(response).to redirect_to articles_path
@@ -271,7 +282,9 @@ describe ArticlesController do
     context "a user is deleting their own article" do
       it "deletes the article and redirects to the root path" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
-        delete :destroy, params: { id: article.id }
+        expect{
+          delete :destroy, params: { id: article.id }
+        }.to change(Article, :count).by -1
 
         expect(response.status).to eq 302
         expect(response).to redirect_to articles_path
@@ -281,7 +294,9 @@ describe ArticlesController do
     context "a random user is deleting an article they didn't write" do
       it "returns a 403" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
-        delete :destroy, params: { id: article.id }
+        expect{
+          delete :destroy, params: { id: article.id }
+        }.to change(Article, :count).by 0
 
         expect(response.status).to eq 403
         expect(response).to render_template(file: "#{Rails.root}/public/403.html")
