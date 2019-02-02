@@ -18,13 +18,17 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    @article = Article.new(article_params)
-    @article.user = current_user
-    if @article.save
-      redirect_to article_path(@article.id)
+    if current_user
+      @article = Article.new(article_params)
+      @article.user = current_user
+      if @article.save
+        redirect_to article_path(@article)
+      else
+        flash[:alert] = "Please finish writing your article!"
+        render :new
+      end
     else
-      flash[:alert] = "Please finish writing your article!"
-      render :new
+      render_403
     end
   end
 

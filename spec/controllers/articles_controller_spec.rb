@@ -1,65 +1,291 @@
 require 'rails_helper'
 
 describe ArticlesController do
+  attr_reader :user, :article, :admin, :rando_user, :comment
+
+  before(:each) do
+    @user = User.create!(
+      first_name: "FakeFirst",
+      last_name: "FakeLast",
+      username: "Fakeyfakefake",
+      password: "fakepass",
+      email: "fake@fake.com",
+      role: "default"
+    )
+
+    @article = Article.create!(
+      title: "Fake Title",
+      body: "Fake Body",
+      user: user
+    )
+
+    @admin = User.create!(
+      first_name: "FakeFirst",
+      last_name: "FakeLast",
+      username: "admin",
+      password: "fakepass",
+      email: "admin@admin.com",
+      role: "admin"
+    )
+
+    @rando_user = User.create!(
+      first_name: "FakeFirst",
+      last_name: "FakeLast",
+      username: "randouser",
+      password: "randopass",
+      email: "rando@rando.com",
+      role: "default"
+    )
+
+    @comment = Comment.create!(
+      article: article,
+      user: rando_user,
+      body: "Fake Comment"
+    )
+  end
+
+  after(:each) do
+    comment.delete
+    article.delete
+    user.delete
+    admin.delete
+    rando_user.delete
+  end
+
   context ".index" do
-    it "returns a list of articles"
+    it "returns a list of articles" do
+      allow(Article).to receive(:articles_to_display).and_return([article])
+      get :index
+
+      expect(response.status).to eq 200
+      assert_template :index
+    end
   end
 
   context ".show" do
-    it "returns the article and it's comments"
+    it "returns the article referenced" do
+      allow(Article).to receive(:find).and_return(article)
+      allow(Comment).to receive(:comments_to_display).and_return([comment])
+
+      get :show, params: { id: article.id }
+
+      expect(response.status).to eq 200
+      assert_template :show
+    end
   end
 
   context ".new" do
     context "a logged in user" do
-      it "returns a new Article"
+      it "returns a new Article" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+
+        get :new
+
+        expect(response.status).to eq 200
+        assert_template :new
+      end
     end
 
     context "a visitor" do
-      it "returns a 403"
+      it "returns a 403" do
+        get :new
+
+        expect(response.status).to eq 403
+        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+      end
     end
   end
 
   context ".create" do
-    context "when all fields are filled in" do
-      it "saves the article and redirects to Article show"
+    context "a visitor" do
+      it "returns a 403" do
+        post :create, params: {
+                              article: {
+                                title: :fake_title,
+                                body: :fake_body
+                              }
+                             }
+
+        expect(response.status).to eq 403
+        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+      end
     end
 
-    context "when a field is missing" do
-      it "returns an alert"
+    context "a user" do
+      context "when all fields are filled in" do
+        it "saves the article and redirects to Article show" do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+          post :create, params: {
+                                article: {
+                                  title: :fake_title,
+                                  body: :fake_body
+                                }
+                               }
+
+          expect(response.status).to eq 302
+        end
+      end
+
+      context "when a field is missing" do
+        it "returns user to new template" do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+          post :create, params: {
+                                article: {
+                                  body: :fake_body
+                                }
+                               }
+
+          expect(response.status).to eq 200
+          assert_template :new
+        end
+      end
     end
   end
 
   context ".edit" do
+    context "a visitor is editing the article" do
+      it "returns a 403" do
+        get :edit, params: { id: article.id }
+
+        expect(response.status).to eq 403
+        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+      end
+    end
+
     context "a user is editing their own article" do
-      it "returns the article"
+      it "returns the article" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        get :edit, params: { id: article.id }
+
+        expect(response.status).to eq 200
+        assert_template :edit
+      end
     end
 
     context "a random user is editing an article" do
-      it "returns a 403"
+      it "returns a 403" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
+        get :edit, params: { id: article.id }
+
+        expect(response.status).to eq 403
+        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+      end
+    end
+
+    context "an admin is editing the article" do
+      it "returns a 403" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
+        get :edit, params: { id: article.id }
+
+        expect(response.status).to eq 403
+        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+      end
     end
   end
 
   context ".update" do
+    context "a visitor" do
+      it "returns a 403" do
+        put :update, params: {
+                              id: article.id,
+                              article: {
+                                title: :fake_title,
+                                body: :fake_body
+                              }
+                             }
+
+        expect(response.status).to eq 403
+        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+      end
+    end
+
     context "a user is editing their own article" do
-      it "updates the article"
+      it "updates the article" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        put :update, params: {
+                              id: article.id,
+                              article: {
+                                title: :fake_title,
+                                body: :fake_body
+                              }
+                             }
+
+        expect(response.status).to eq 302
+        expect(response).to redirect_to article_path(article)
+      end
+    end
+
+    context "an admin" do
+      it "returns a 403" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
+        put :update, params: {
+                              id: article.id,
+                              article: {
+                                title: :fake_title,
+                                body: :fake_body
+                              }
+                             }
+
+        expect(response.status).to eq 403
+        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+      end
     end
 
     context "a random user is updating the article" do
-      it "returns a 403"
+      it "returns a 403" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
+        put :update, params: {
+                              id: article.id,
+                              article: {
+                                title: :fake_title,
+                                body: :fake_body
+                              }
+                             }
+
+        expect(response.status).to eq 403
+        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+      end
     end
   end
 
   context ".destroy" do
-    context "an admin is deleting the article" do
-      it "deletes the article and sends the user to the root path"
+    context "a visitor" do
+      it "returns a 403" do
+        delete :destroy, params: { id: article.id }
+
+        expect(response.status).to eq 403
+        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+      end
+    end
+
+    context "an admin" do
+      it "deletes the article and redirects to the root path" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
+        delete :destroy, params: { id: article.id }
+
+        expect(response.status).to eq 302
+        expect(response).to redirect_to articles_path
+      end
     end
 
     context "a user is deleting their own article" do
-      it "deletes the article and sends the user to the root path"
+      it "deletes the article and redirects to the root path" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        delete :destroy, params: { id: article.id }
+
+        expect(response.status).to eq 302
+        expect(response).to redirect_to articles_path
+      end
     end
 
     context "a random user is deleting an article they didn't write" do
-      it "returns a 403"
+      it "returns a 403" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
+        delete :destroy, params: { id: article.id }
+
+        expect(response.status).to eq 403
+        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+      end
     end
   end
 end
