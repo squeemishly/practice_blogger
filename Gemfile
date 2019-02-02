@@ -16,6 +16,7 @@ gem 'faker'
 gem 'kaminari'
 gem 'figaro'
 gem "aws-sdk-s3", require: false
+gem 'rails-controller-testing'
 
 group :development, :test do
   gem 'rspec-rails'
