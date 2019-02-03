@@ -5,6 +5,8 @@ class SearchController < ApplicationController
       @found_articles = users.map do |user|
         user.articles
       end.flatten
+    else
+      redirect_to request.referrer
     end
   end
 end
