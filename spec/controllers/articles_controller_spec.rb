@@ -7,11 +7,8 @@ describe ArticlesController do
     @user = create(:user)
     @article = create(:article, user: user)
     @admin = create(:admin)
-    @rando_user = create(:user,
-                          username: "randouser",
-                          password: "randopass",
-                          email: "rando@rando.com",)
-    @comment = create(:comment, 
+    @rando_user = create(:rando_user)
+    @comment = create(:comment,
                         user: rando_user,
                         article: article)
   end

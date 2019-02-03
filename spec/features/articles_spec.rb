@@ -7,10 +7,7 @@ describe "Articles pages" do
     @user = create(:user)
     @article = create(:article, user: user)
     @admin = create(:admin)
-    @rando_user = create(:user,
-                          username: "randouser",
-                          password: "randopass",
-                          email: "rando@rando.com",)
+    @rando_user = create(:rando_user)
   end
 
   describe "article index" do

@@ -38,15 +38,8 @@ describe "Admin Dashboard" do
 
   describe "use the search to find a user" do
     it "returns all users containing the search term with a link to their profile" do
-      user2 = create(:user,
-                      username: "fakeusername",
-                      password: "fakepass",
-                      email: "totesfake@fake.com",)
-
-      user3 = create(:user,
-                      username: "shouldnotreturn",
-                      password: "fakepass",
-                      email: "notatallfake@fake.com",)
+      user2 = create(:rando_user, username: "anotherfake")
+      user3 = create(:diff_user)
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
 

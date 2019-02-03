@@ -50,13 +50,8 @@ describe "Nav Bars" do
 
   context "User Search" do
     it "returns articles by the user you search for" do
-      rando_user = create(:user,
-                            username: "randouser",
-                            password: "randopass",
-                            email: "rando@rando.com",)
-
+      rando_user = create(:rando_user)
       article = create(:article, user: user)
-
       rando_article = create(:article,
                               title: "totes post",
                               body: "Fake Body",
