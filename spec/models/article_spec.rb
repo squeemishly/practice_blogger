@@ -27,16 +27,6 @@ RSpec.describe Article, type: :model do
     )
   end
 
-  after(:each) do
-    Article.all.each do |article|
-      article.destroy
-    end
-
-    User.all.each do |user|
-      user.destroy
-    end
-  end
-
   context "attributes" do
     it { should validate_presence_of(:title) }
     it { should validate_presence_of(:body) }

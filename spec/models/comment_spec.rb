@@ -37,20 +37,6 @@ RSpec.describe Comment, type: :model do
       end
     end
 
-    after(:each) do
-      Comment.all.each do |comment|
-        comment.destroy
-      end
-
-      Article.all.each do |article|
-        article.destroy
-      end
-
-      User.all.each do |user|
-        user.destroy
-      end
-    end
-
     context ".create_comment" do
       it "should return a new comment" do
         params = {body: "fake"}

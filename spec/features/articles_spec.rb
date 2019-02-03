@@ -38,16 +38,6 @@ describe "Articles pages" do
     )
   end
 
-  after(:each) do
-    Article.all.each do |article|
-      article.delete
-    end
-
-    user.delete
-    admin.delete
-    rando_user.delete
-  end
-
   describe "article index" do
     it "allows visitors to see all articles" do
       visit root_path

@@ -53,20 +53,6 @@ describe "Article Comments" do
     )
   end
 
-  after(:each) do
-    Comment.all.each do |comment|
-      comment.delete
-    end
-
-    Article.all.each do |article|
-      article.delete
-    end
-
-    User.all.each do |user|
-      user.delete
-    end
-  end
-
   describe "view all commments on an article" do
     it "allows all visitors to view all comments on an article" do
       (1..10).each do |i|

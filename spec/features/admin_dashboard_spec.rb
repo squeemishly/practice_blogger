@@ -29,16 +29,6 @@ describe "Admin Dashboard" do
     )
   end
 
-  after(:each) do
-    Article.all.each do |article|
-      article.delete
-    end
-
-    User.all.each do |user|
-      user.delete
-    end
-  end
-
   describe "access" do
     context "a user" do
       it "is not allowed to see the admin dashboard" do

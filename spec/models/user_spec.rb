@@ -14,12 +14,6 @@ RSpec.describe User, type: :model do
     )
   end
 
-  after(:each) do
-    User.all.each do |user|
-      user.destroy
-    end
-  end
-
   context "attributes" do
     it { should validate_presence_of(:first_name) }
     it { should validate_presence_of(:last_name) }

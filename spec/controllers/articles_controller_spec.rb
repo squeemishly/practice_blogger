@@ -44,14 +44,6 @@ describe ArticlesController do
     )
   end
 
-  after(:each) do
-    comment.delete
-    article.delete
-    user.delete
-    admin.delete
-    rando_user.delete
-  end
-
   context ".index" do
     it "returns a list of articles" do
       allow(Article).to receive(:articles_to_display).and_return([article])
