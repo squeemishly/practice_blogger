@@ -34,6 +34,7 @@ end
 
 group :test do
   gem 'database_cleaner'
+  gem "factory_bot_rails", "~> 4.0"
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

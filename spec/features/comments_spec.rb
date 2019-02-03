@@ -4,63 +4,29 @@ describe "Article Comments" do
   attr_reader :user, :article, :admin, :rando_user, :comment, :diff_user
 
   before(:each) do
-    @user = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "Fakeyfakefake",
-      password: "fakepass",
-      email: "fake@fake.com",
-      role: "default"
-    )
-
-    @article = Article.create!(
-      title: "Fake Title",
-      body: "Fake Body",
-      user: user
-    )
-
-    @admin = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "admin",
-      password: "fakepass",
-      email: "admin@admin.com",
-      role: "admin"
-    )
-
-    @rando_user = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "randouser",
-      password: "randopass",
-      email: "rando@rando.com",
-      role: "default"
-    )
-
-    @comment = Comment.create!(
-      article: article,
-      user: rando_user,
-      body: "Fake Comment"
-    )
-
-    @diff_user = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "diffuser",
-      password: "diffpass",
-      email: "diff@diff.com",
-      role: "default"
-    )
+    @user = create(:user)
+    @article = create(:article, user: user)
+    @admin = create(:admin)
+    @rando_user = create(:user,
+                          username: "randouser",
+                          password: "randopass",
+                          email: "rando@rando.com",)
+    @comment = create(:comment,
+                        user: rando_user,
+                        article: article)
+    @diff_user = create(:user,
+                        username: "diffuser",
+                        password: "diffpass",
+                        email: "diff@diff.com",)
   end
 
   describe "view all commments on an article" do
     it "allows all visitors to view all comments on an article" do
       (1..10).each do |i|
-        Comment.create!(
-          article: article,
-          user: rando_user,
-          body: "Fake Comment #{i}"
-        )
+        create(:comment,
+                user: rando_user,
+                article: article,
+                body: "Fake Comment #{i}")
       end
 
       visit article_path(article)

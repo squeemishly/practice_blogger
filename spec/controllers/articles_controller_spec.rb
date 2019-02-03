@@ -4,44 +4,16 @@ describe ArticlesController do
   attr_reader :user, :article, :admin, :rando_user, :comment
 
   before(:each) do
-    @user = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "Fakeyfakefake",
-      password: "fakepass",
-      email: "fake@fake.com",
-      role: "default"
-    )
-
-    @article = Article.create!(
-      title: "Fake Title",
-      body: "Fake Body",
-      user: user
-    )
-
-    @admin = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "admin",
-      password: "fakepass",
-      email: "admin@admin.com",
-      role: "admin"
-    )
-
-    @rando_user = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "randouser",
-      password: "randopass",
-      email: "rando@rando.com",
-      role: "default"
-    )
-
-    @comment = Comment.create!(
-      article: article,
-      user: rando_user,
-      body: "Fake Comment"
-    )
+    @user = create(:user)
+    @article = create(:article, user: user)
+    @admin = create(:admin)
+    @rando_user = create(:user,
+                          username: "randouser",
+                          password: "randopass",
+                          email: "rando@rando.com",)
+    @comment = create(:comment, 
+                        user: rando_user,
+                        article: article)
   end
 
   context ".index" do

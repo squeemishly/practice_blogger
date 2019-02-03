@@ -14,26 +14,14 @@ RSpec.describe Comment, type: :model do
     attr_reader :user, :article
 
     before(:each) do
-      @user = User.create(
-        first_name: :first_name,
-        last_name: :last_name,
-        username: :username,
-        password: :my1pass!,
-        email: "fake@fakey.com"
-      )
-
-      @article = Article.create(
-          title: "fake title",
-          body: "fake body",
-          user: user
-      )
+      @user = create(:user)
+      @article = create(:article, user: user)
 
       (1..3).each do |i|
-        Comment.create(
-          body: "fake comment #{i}",
-          article: article,
-          user: user
-        )
+        @comment = create(:comment,
+                          user: user,
+                          article: article,
+                          body: "fake comment #{i}")
       end
     end
 

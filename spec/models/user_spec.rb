@@ -4,14 +4,7 @@ RSpec.describe User, type: :model do
   attr_reader :user
 
   before(:each) do
-    @user = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "Fakeyfakefake",
-      password: "fakepass",
-      email: "fake@fake.com",
-      role: "default"
-    )
+    @user = create(:user)
   end
 
   context "attributes" do

@@ -4,38 +4,13 @@ describe "Articles pages" do
   attr_reader :user, :article, :admin, :rando_user
 
   before(:each) do
-    @user = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "Fakeyfakefake",
-      password: "fakepass",
-      email: "fake@fake.com",
-      role: "default"
-    )
-
-    @article = Article.create!(
-      title: "Fake Title",
-      body: "Fake Body",
-      user: user
-    )
-
-    @admin = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "admin",
-      password: "fakepass",
-      email: "admin@admin.com",
-      role: "admin"
-    )
-
-    @rando_user = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "randouser",
-      password: "randopass",
-      email: "rando@rando.com",
-      role: "default"
-    )
+    @user = create(:user)
+    @article = create(:article, user: user)
+    @admin = create(:admin)
+    @rando_user = create(:user,
+                          username: "randouser",
+                          password: "randopass",
+                          email: "rando@rando.com",)
   end
 
   describe "article index" do
@@ -49,11 +24,7 @@ describe "Articles pages" do
     context "pagination" do
       it "automatically paginates after 10 articles" do
         (1..20).each do |i|
-          Article.create(
-            title: "fake title #{i}",
-            body: "fake body",
-            user: user
-          )
+          create(:article, user: user, title: "fake title #{i}")
         end
 
         visit root_path
@@ -71,11 +42,7 @@ describe "Articles pages" do
 
       it "allows the user to change the number of articles displayed" do
         (1..20).each do |i|
-          Article.create(
-            title: "fake title #{i}",
-            body: "fake body",
-            user: user
-          )
+          create(:article, user: user, title: "fake title #{i}")
         end
 
         visit root_path
@@ -93,7 +60,7 @@ describe "Articles pages" do
   describe "article show" do
     context "as a visitor" do
       it "does not show an edit or delete link" do
-        visit article_path(article.id)
+        visit article_path(article)
 
         expect(page).to have_content article.title
         expect(page).to have_content article.body
@@ -106,7 +73,7 @@ describe "Articles pages" do
       it "does shows and edit and a delete link" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
-        visit article_path(article.id)
+        visit article_path(article)
 
         expect(page).to have_content article.title
         expect(page).to have_content article.body
@@ -119,7 +86,7 @@ describe "Articles pages" do
       it "does not show an edit or delete link" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
 
-        visit article_path(article.id)
+        visit article_path(article)
 
         expect(page).to have_content article.title
         expect(page).to have_content article.body
@@ -132,7 +99,7 @@ describe "Articles pages" do
       it "does not show an edit but does show a delete link" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
 
-        visit article_path(article.id)
+        visit article_path(article)
 
         expect(page).to have_content article.title
         expect(page).to have_content article.body

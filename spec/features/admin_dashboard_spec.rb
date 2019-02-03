@@ -4,29 +4,9 @@ describe "Admin Dashboard" do
   attr_reader :user, :article, :admin
 
   before(:each) do
-    @user = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "Fakeyfakefake",
-      password: "fakepass",
-      email: "fake@fake.com",
-      role: "default"
-    )
-
-    @article = Article.create!(
-      title: "Fake Title",
-      body: "Fake Body",
-      user_id: user.id
-    )
-
-    @admin = User.create!(
-      first_name: "FakeFirst",
-      last_name: "FakeLast",
-      username: "admin",
-      password: "fakepass",
-      email: "admin@admin.com",
-      role: "admin"
-    )
+    @user = create(:user)
+    @article = create(:article, user: user)
+    @admin = create(:admin)
   end
 
   describe "access" do
@@ -58,23 +38,15 @@ describe "Admin Dashboard" do
 
   describe "use the search to find a user" do
     it "returns all users containing the search term with a link to their profile" do
-      user2 = User.create!(
-        first_name: "FakeFirst",
-        last_name: "FakeLast",
-        username: "fakeusername",
-        password: "fakepass",
-        email: "totesfake@fake.com",
-        role: "default"
-      )
+      user2 = create(:user,
+                      username: "fakeusername",
+                      password: "fakepass",
+                      email: "totesfake@fake.com",)
 
-      user3 = User.create!(
-        first_name: "FakeFirst",
-        last_name: "FakeLast",
-        username: "shouldnotreturn",
-        password: "fakepass",
-        email: "notatallfake@fake.com",
-        role: "default"
-      )
+      user3 = create(:user,
+                      username: "shouldnotreturn",
+                      password: "fakepass",
+                      email: "notatallfake@fake.com",)
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
 
