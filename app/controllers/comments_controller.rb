@@ -11,13 +11,17 @@ class CommentsController < ApplicationController
   end
 
   def create
-    @comment = Comment.create_comment(comment_params, @article, current_user)
-    if @comment.body == ""
-      flash[:alert] = "Please add a comment to continue"
-      redirect_to new_article_comment_path(@article)
+    if current_user
+      @comment = Comment.create_comment(comment_params, @article, current_user)
+      if @comment.body == ""
+        flash[:alert] = "Please add a comment to continue"
+        redirect_to new_article_comment_path(@article)
+      else
+        @comment.save
+        redirect_to article_path(@article)
+      end
     else
-      @comment.save
-      redirect_to article_path(@article)
+      render_403
     end
   end
 
