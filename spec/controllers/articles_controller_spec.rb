@@ -111,12 +111,19 @@ describe ArticlesController do
   end
 
   context ".edit" do
-    context "a visitor is editing the article" do
-      it "returns a 403" do
-        get :edit, params: { id: article.id }
+    context "users who are not permitted" do
+      context "visitors, users who did not write the article, admins" do
+        it "returns a 403" do
+          users = [nil, rando_user, admin]
 
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+          users.each do |tested_user|
+            allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
+            get :edit, params: { id: article.id }
+
+            expect(response.status).to eq 403
+            expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+          end
+        end
       end
     end
 
@@ -129,41 +136,28 @@ describe ArticlesController do
         assert_template :edit
       end
     end
-
-    context "a random user is editing an article" do
-      it "returns a 403" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
-        get :edit, params: { id: article.id }
-
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
-      end
-    end
-
-    context "an admin is editing the article" do
-      it "returns a 403" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
-        get :edit, params: { id: article.id }
-
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
-      end
-    end
   end
 
   context ".update" do
-    context "a visitor" do
-      it "returns a 403" do
-        put :update, params: {
-                              id: article.id,
-                              article: {
-                                title: :fake_title,
-                                body: :fake_body
-                              }
-                             }
+    context "users who are not permitted" do
+      context "visitors, users who did not write the article, admins" do
+        it "returns a 403" do
+          users = [nil, rando_user, admin]
 
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+          users.each do |tested_user|
+            allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
+            put :update, params: {
+                                  id: article.id,
+                                  article: {
+                                    title: :fake_title,
+                                    body: :fake_body
+                                  }
+                                 }
+
+            expect(response.status).to eq 403
+            expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+          end
+        end
       end
     end
 
@@ -182,49 +176,24 @@ describe ArticlesController do
         expect(response).to redirect_to article_path(article)
       end
     end
-
-    context "an admin" do
-      it "returns a 403" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
-        put :update, params: {
-                              id: article.id,
-                              article: {
-                                title: :fake_title,
-                                body: :fake_body
-                              }
-                             }
-
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
-      end
-    end
-
-    context "a random user is updating the article" do
-      it "returns a 403" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
-        put :update, params: {
-                              id: article.id,
-                              article: {
-                                title: :fake_title,
-                                body: :fake_body
-                              }
-                             }
-
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
-      end
-    end
   end
 
   context ".destroy" do
-    context "a visitor" do
-      it "returns a 403" do
-        expect{
-          delete :destroy, params: { id: article.id }
-        }.to change(Article, :count).by 0
+    context "users who are not permitted" do
+      context "visitors, users who did not write the article" do
+        it "returns a 403" do
+          users = [nil, rando_user]
 
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+          users.each do |tested_user|
+            allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
+            expect{
+              delete :destroy, params: { id: article.id }
+            }.to change(Article, :count).by 0
+
+            expect(response.status).to eq 403
+            expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+          end
+        end
       end
     end
 
@@ -249,18 +218,6 @@ describe ArticlesController do
 
         expect(response.status).to eq 302
         expect(response).to redirect_to articles_path
-      end
-    end
-
-    context "a random user is deleting an article they didn't write" do
-      it "returns a 403" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(rando_user)
-        expect{
-          delete :destroy, params: { id: article.id }
-        }.to change(Article, :count).by 0
-
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
       end
     end
   end

@@ -88,32 +88,24 @@ describe CommentsController do
   end
 
   context ".destroy" do
-    context "a visitor" do
-      it "returns a 403" do
-        expect{
-          delete :destroy, params: {
-                              article_id: article.id,
-                              id: comment.id
-                            }
-              }.to change(Comment, :count).by 0
+    context "users who are not permitted" do
+      context "visitors, users who did not write the comment nor the article" do
+        it "returns a 403" do
+          users = [nil, diff_user]
 
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
-      end
-    end
+          users.each do |tested_user|
+            allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
+            expect{
+              delete :destroy, params: {
+                article_id: article.id,
+                id: comment.id
+              }
+            }.to change(Comment, :count).by 0
 
-    context "a random user" do
-      it "returns a 403" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(diff_user)
-        expect{
-          delete :destroy, params: {
-                              article_id: article.id,
-                              id: comment.id
-                            }
-              }.to change(Comment, :count).by 0
-
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+            expect(response.status).to eq 403
+            expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+          end
+        end
       end
     end
 
@@ -164,28 +156,22 @@ describe CommentsController do
   end
 
   context ".edit" do
-    context "a visitor" do
-      it "returns a 403" do
-        get :edit, params: {
-                            article_id: article.id,
-                            id: comment.id
-                          }
+    context "users who are not permitted" do
+      context "visitors, users who did not write the comment, admin" do
+        it "returns a 403" do
+          users = [nil, user, diff_user, admin]
 
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
-      end
-    end
+          users.each do |tested_user|
+            allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
+            get :edit, params: {
+                                article_id: article.id,
+                                id: comment.id
+                              }
 
-    context "a random user" do
-      it "returns a 403" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(diff_user)
-        get :edit, params: {
-                            article_id: article.id,
-                            id: comment.id
-                          }
-
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+            expect(response.status).to eq 403
+            expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+          end
+        end
       end
     end
 
@@ -201,63 +187,28 @@ describe CommentsController do
         assert_template :edit
       end
     end
-
-    context "the article author" do
-      it "returns a 403" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
-        get :edit, params: {
-                            article_id: article.id,
-                            id: comment.id
-                          }
-
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
-      end
-    end
-
-    context "an admin" do
-      it "returns a 403" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
-        get :edit, params: {
-                            article_id: article.id,
-                            id: comment.id
-                          }
-
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
-      end
-    end
   end
 
   context ".update" do
-    context "a visitor" do
-      it "returns a 403" do
-        put :update, params: {
-                            article_id: article.id,
-                            id: comment.id,
-                            comment: {
-                              body: :more_different_body
-                            }
-                          }
+    context "users who are not permitted" do
+      context "visitor, admin, users who did not write the comment" do
+        it "returns a 403" do
+          users = [nil, admin, user, diff_user]
 
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
-      end
-    end
+          users.each do |tested_user|
+            allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
+            put :update, params: {
+                                article_id: article.id,
+                                id: comment.id,
+                                comment: {
+                                  body: :more_different_body
+                                }
+                              }
 
-    context "a random user" do
-      it "returns a 403" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(diff_user)
-        put :update, params: {
-                            article_id: article.id,
-                            id: comment.id,
-                            comment: {
-                              body: :more_different_body
-                            }
-                          }
-
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+            expect(response.status).to eq 403
+            expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+          end
+        end
       end
     end
 
@@ -274,38 +225,6 @@ describe CommentsController do
 
         expect(response.status).to eq 302
         expect(response).to redirect_to article_path(article)
-      end
-    end
-
-    context "the article author" do
-      it "returns a 403" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
-        put :update, params: {
-                            article_id: article.id,
-                            id: comment.id,
-                            comment: {
-                              body: :more_different_body
-                            }
-                          }
-
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
-      end
-    end
-
-    context "an admin" do
-      it "returns a 403" do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
-        put :update, params: {
-                            article_id: article.id,
-                            id: comment.id,
-                            comment: {
-                              body: :more_different_body
-                            }
-                          }
-
-        expect(response.status).to eq 403
-        expect(response).to render_template(file: "#{Rails.root}/public/403.html")
       end
     end
   end
