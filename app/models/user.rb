@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_one_attached :avatar
   has_many :articles, dependent: :destroy
+  has_many :suspensions, dependent: :destroy
 
   validates :username, presence: true, uniqueness: true
   validates :first_name, presence: true
@@ -11,4 +12,8 @@ class User < ApplicationRecord
   has_secure_password
 
   enum role: [:default, :admin]
+
+  def suspended?
+    suspensions.any?
+  end
 end

@@ -38,4 +38,18 @@ RSpec.describe User, type: :model do
       expect(user.role).to eq "admin"
     end
   end
+
+  context "methods" do
+    context ".suspended?" do
+      it "returns true when a user is suspended" do
+        user.suspensions.create(user: user, is_suspended: true)
+
+        expect(user.suspended?).to be true
+      end
+
+      it "returns false when a user is not suspended" do
+        expect(user.suspended?).to be false
+      end
+    end
+  end
 end
