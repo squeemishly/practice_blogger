@@ -60,13 +60,13 @@ describe ArticlesController do
   context ".create" do
     context "a visitor" do
       it "returns a 403" do
-        expect{
-           post :create, params: {
-                              article: {
-                                title: :fake_title,
-                                body: :fake_body
-                              }
-                             }
+        params = { article: {
+                    title: :fake_title,
+                    body: :fake_body
+                  } }
+
+        expect {
+           post :create, params: params
               }.to change(Article, :count).by 0
 
         expect(response.status).to eq 403
@@ -78,14 +78,13 @@ describe ArticlesController do
       context "when all fields are filled in" do
         it "saves the article and redirects to Article show" do
           allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+          params = { article: {
+                      title: :fake_title,
+                      body: :fake_body
+                    } }
 
           expect{
-             post :create, params: {
-                                article: {
-                                  title: :fake_title,
-                                  body: :fake_body
-                                }
-                               }
+             post :create, params: params
                 }.to change(Article, :count).by 1
 
           expect(response.status).to eq 302
@@ -95,12 +94,12 @@ describe ArticlesController do
       context "when a field is missing" do
         it "returns user to new template" do
           allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+          params = { article: {
+                      body: :fake_body
+                    } }
+
           expect{
-             post :create, params: {
-                                article: {
-                                  body: :fake_body
-                                }
-                               }
+             post :create, params: params
                 }.to change(Article, :count).by 0
 
           expect(response.status).to eq 200
@@ -143,16 +142,15 @@ describe ArticlesController do
       context "visitors, users who did not write the article, admins" do
         it "returns a 403" do
           users = [nil, rando_user, admin]
+          params = { id: article.id,
+                    article: {
+                      title: :fake_title,
+                      body: :fake_body
+                    } }
 
           users.each do |tested_user|
             allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
-            put :update, params: {
-                                  id: article.id,
-                                  article: {
-                                    title: :fake_title,
-                                    body: :fake_body
-                                  }
-                                 }
+            put :update, params: params
 
             expect(response.status).to eq 403
             expect(response).to render_template(file: "#{Rails.root}/public/403.html")
@@ -164,13 +162,13 @@ describe ArticlesController do
     context "a user is editing their own article" do
       it "updates the article" do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
-        put :update, params: {
-                              id: article.id,
-                              article: {
-                                title: :fake_title,
-                                body: :fake_body
-                              }
-                             }
+        params = { id: article.id,
+                  article: {
+                    title: :fake_title,
+                    body: :fake_body
+                  } }
+
+        put :update, params: params
 
         expect(response.status).to eq 302
         expect(response).to redirect_to article_path(article)

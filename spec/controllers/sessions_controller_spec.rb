@@ -14,13 +14,12 @@ describe SessionsController do
     context "correct username and password" do
       it "creates a session and returns the user to the article index" do
         user = create(:user)
+        params = { session: {
+                    username: "Fakeyfakefake",
+                    password: "fakepass"
+                  } }
 
-        post :create, params: {
-                        session: {
-                          username: "Fakeyfakefake",
-                          password: "fakepass"
-                        }
-                      }
+        post :create, params: params
 
         expect(controller.current_user).to eq(user)
         expect(response.status).to eq 302
@@ -31,13 +30,12 @@ describe SessionsController do
     context "incorrect username or password" do
       it "sends the user back to the login page" do
         user = create(:user)
+        params = { session: {
+                    username: "Fakeyfakefake",
+                    password: "pass"
+                  } }
 
-        post :create, params: {
-                        session: {
-                          username: "Fakeyfakefake",
-                          password: "pass"
-                        }
-                      }
+        post :create, params: params
 
         expect(response.status).to eq 302
         expect(response).to redirect_to login_path

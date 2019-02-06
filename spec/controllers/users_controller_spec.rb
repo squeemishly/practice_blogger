@@ -21,16 +21,16 @@ describe UsersController do
   context ".create" do
     context "all of the fields are filled in" do
       it "creates the user and redirects to the articles path" do
+        params = { user: {
+                  first_name: :fake_first_name,
+                  last_name: :fake_last_name,
+                  username: :fake_username,
+                  password: :fake_pass,
+                  email: :fake_email
+                } }
+
         expect {
-          post :create, params: {
-                          user: {
-                            first_name: :fake_first_name,
-                            last_name: :fake_last_name,
-                            username: :fake_username,
-                            password: :fake_pass,
-                            email: :fake_email,
-                          }
-                        }
+          post :create, params: params
               }.to change(User, :count).by 1
 
         expect(response.status).to eq 302
@@ -40,15 +40,15 @@ describe UsersController do
 
     context "the user missed a field" do
       it "sends an alert and renders the new page again" do
+        params = { user: {
+                  first_name: :fake_first_name,
+                  last_name: :fake_last_name,
+                  username: :fake_username,
+                  password: :fake_pass
+                } }
+
         expect {
-          post :create, params: {
-                          user: {
-                            first_name: :fake_first_name,
-                            last_name: :fake_last_name,
-                            username: :fake_username,
-                            password: :fake_pass,
-                          }
-                        }
+          post :create, params: params
               }.to change(User, :count).by 0
 
         expect(response.status).to eq 200
@@ -101,6 +101,19 @@ describe UsersController do
   end
 
   context ".update" do
+    attr_reader :params
+
+    before(:each) do
+      @params = { id: user.id,
+                  user: {
+                    first_name: "new first name",
+                    last_name: "last_name",
+                    username: "username",
+                    password: "pass",
+                    email: "email"
+                  } }
+    end
+
     context "permitted updaters" do
       context "a user on their own profile or an admin" do
         it "updates and renders the user show page" do
@@ -108,16 +121,7 @@ describe UsersController do
 
           users.each do |tested_user|
             allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
-            get :update, params: {
-                          id: user.id,
-                          user: {
-                            first_name: "new first name",
-                            last_name: "last_name",
-                            username: "username",
-                            password: "pass",
-                            email: "email",
-                          }
-                        }
+            get :update, params: params
 
             expect(response.status).to eq 302
             expect(response).to redirect_to user_path(user)
@@ -133,16 +137,7 @@ describe UsersController do
 
           users.each do |tested_user|
             allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
-            get :update, params: {
-                          id: user.id,
-                          user: {
-                            first_name: "new first name",
-                            last_name: "last_name",
-                            username: "username",
-                            password: "pass",
-                            email: "email",
-                          }
-                        }
+            get :update, params: params
 
             expect(response.status).to eq 403
             expect(response).to render_template(file: "#{Rails.root}/public/403.html")
