@@ -20,6 +20,7 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find(params[:id])
+    render_403 unless @user == current_user || current_admin?
   end
 
   def update
