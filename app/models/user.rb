@@ -14,6 +14,6 @@ class User < ApplicationRecord
   enum role: [:default, :admin]
 
   def suspended?
-    suspensions.any?
+    suspensions.where(is_suspended: true).any?
   end
 end
