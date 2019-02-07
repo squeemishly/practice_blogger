@@ -32,27 +32,31 @@
 
 <table class="article-comments">
   <% @comments.each do |comment| %>
-    <tr>
-      <td class="commentor">
-        <% if comment.user.avatar.attached? %>
-          <%= image_tag(url_for(comment.user.avatar), class: "comment-avatar") %>
-        <% end %>
-        <%= link_to comment.user.username, user_path(comment.user) %>
-      </td>
-      <td>
-        <%= comment.body %></br>
-        <%= comment.created_at.strftime("Posted: %m/%d/%Y") %><br />
-        <div class="comments-options-buttons">
-          <% if current_user && (current_user == @article.user || current_user == comment.user || current_admin?) %>
-            <%= button_to "Delete Comment", article_comment_path(@article, comment), class: "btn comments-option", method: :delete %>
-          <% end %>
+    <% if comment.user.suspended? && comment.user != current_user %>
 
-          <% if current_user == comment.user %>
-            <%= button_to "Edit Comment", edit_article_comment_path(@article, comment), class: "btn comments-option", method: :get %>
+    <% else %>
+      <tr>
+        <td class="commentor">
+          <% if comment.user.avatar.attached? %>
+            <%= image_tag(url_for(comment.user.avatar), class: "comment-avatar") %>
           <% end %>
-        </div>
-      </td>
-    </tr>
+          <%= link_to comment.user.username, user_path(comment.user) %>
+        </td>
+        <td>
+          <%= comment.body %></br>
+          <%= comment.created_at.strftime("Posted: %m/%d/%Y") %><br />
+          <div class="comments-options-buttons">
+            <% if current_user && (current_user == @article.user || current_user == comment.user || current_admin?) %>
+              <%= button_to "Delete Comment", article_comment_path(@article, comment), class: "btn comments-option", method: :delete %>
+            <% end %>
+
+            <% if current_user == comment.user %>
+              <%= button_to "Edit Comment", edit_article_comment_path(@article, comment), class: "btn comments-option", method: :get %>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
   <% end %>
 </table>
 

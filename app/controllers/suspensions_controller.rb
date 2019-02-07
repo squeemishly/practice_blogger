@@ -2,7 +2,7 @@ class SuspensionsController < ApplicationController
   def create
     if current_admin?
       user = User.find(params[:user])
-      user.suspensions.create(user: user, is_suspended: true)
+      Suspension.create(user: user, is_suspended: true)
       redirect_to user_path(user)
     else
       render_403

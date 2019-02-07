@@ -46,6 +46,38 @@ describe "Article Comments" do
       expect(page).to_not have_content "Fake Comment 10"
       expect(page).to_not have_content "Fake Comment 5"
     end
+
+    context "suspended user comments" do
+      context "a suspended user" do
+        it "can see their own comments" do
+          suspended_user = create(:user, username: "Suspended", email: "suspended@gmail.com")
+          Suspension.create(user: suspended_user, is_suspended: true)
+          comment = Comment.create(user: suspended_user, body: "Suspended Body", article: article)
+
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(suspended_user)
+
+          visit article_path(article)
+
+          expect(page).to have_content comment.body
+          expect(page).to have_link suspended_user.username
+        end
+      end
+
+      context "a non-suspended user" do
+        it "cannot see the comments of suspended users" do
+          suspended_user = create(:user, username: "Suspended", email: "suspended@gmail.com")
+          Suspension.create(user: suspended_user, is_suspended: true)
+          comment = Comment.create(user: suspended_user, body: "Suspended Body", article: article)
+
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+
+          visit article_path(article)
+
+          expect(page).to_not have_content comment.body
+          expect(page).to_not have_link suspended_user.username
+        end
+      end
+    end
   end
 
   describe "add a comment to an article" do

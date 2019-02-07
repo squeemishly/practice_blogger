@@ -21,20 +21,24 @@
     </th>
   </tr>
   <% @articles.each do |article| %>
-    <tr>
-      <td>
-        <% if article.user.avatar.attached? %>
-          <%= image_tag(url_for(article.user.avatar), class:"article-author-image") %><br/>
-        <% end %>
-        <%= link_to article.user.username, user_path(article.user.id) %>
-      </td>
-      <td>
-        <%= link_to article.title, article_path(article.id) %>
-      </td>
-      <td>
-        <%= article.created_at.strftime("%m/%d/%Y") %>
-      </td>
-    </tr>
+    <% if article.user.suspended? && article.user != current_user %>
+    
+    <% else %>
+      <tr>
+        <td>
+          <% if article.user.avatar.attached? %>
+            <%= image_tag(url_for(article.user.avatar), class:"article-author-image") %><br/>
+          <% end %>
+          <%= link_to article.user.username, user_path(article.user.id) %>
+        </td>
+        <td>
+          <%= link_to article.title, article_path(article.id) %>
+        </td>
+        <td>
+          <%= article.created_at.strftime("%m/%d/%Y") %>
+        </td>
+      </tr>
+    <% end %>
   <% end %>
 </table>
 <br/>

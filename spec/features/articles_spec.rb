@@ -52,6 +52,38 @@ describe "Articles pages" do
         expect(page).to have_content "Displaying all 21 articles"
       end
     end
+
+    context "the articles of suspended users" do
+      context "a suspended user" do
+        it "can see their articles on the index" do
+          suspended_user = create(:diff_user)
+          Suspension.create(user: suspended_user, is_suspended: true)
+          suspended_article = create(:article, user: suspended_user, title: "Suspended Article")
+
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(suspended_user)
+
+          visit root_path
+
+          expect(page).to have_link "Suspended Article"
+          expect(page).to have_link suspended_user.username
+        end
+      end
+
+      context "a non-suspended user" do
+        it "cannot see the articles of suspended users" do
+          suspended_user = create(:diff_user)
+          Suspension.create(user: suspended_user, is_suspended: true)
+          suspended_article = create(:article, user: suspended_user, title: "Suspended Article")
+
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+
+          visit root_path
+
+          expect(page).to_not have_link "Suspended Article"
+          expect(page).to_not have_link suspended_user.username
+        end
+      end
+    end
   end
 
   describe "article show" do

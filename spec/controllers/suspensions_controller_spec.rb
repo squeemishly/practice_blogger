@@ -37,7 +37,7 @@ describe SuspensionsController do
   context ".update" do
     context "as an admin" do
       it "updates the suspension to false and shows the user" do
-        suspension = user.suspensions.create(user: user, is_suspended: true)
+        user.suspensions.create(user: user, is_suspended: true)
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
 
         put :update, params: { id: 1, user: user.id }
