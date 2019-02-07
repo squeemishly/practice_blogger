@@ -8,9 +8,9 @@
 
 <% if current_admin? %>
   <% if @user.suspended? %>
-    <%= button_to "Reactivate User", suspension_path, method: :put, params: {user: @user.id} %>
+    <%= button_to "Reactivate User", suspension_path, method: :put, params: {user: @user.id}, class: "btn" %>
   <% else %>
-    <%= button_to "Suspend User", suspensions_path(1), method: :post, params: {user: @user.id} %>
+    <%= button_to "Suspend User", suspensions_path(1), method: :post, params: {user: @user.id}, class: "btn" %>
   <% end %>
 <% end %>
 
