@@ -1,7 +1,7 @@
 <ul>
   <% if @found_articles %>
     <% @found_articles.each do |article| %>
-      <li><%= link_to article.title, article_path(article.id) %> written by <%= article.user.username %></li>
+      <li><%= link_to article.title, article_path(article.id) %> written by <%= link_to article.user.username, user_path(article.user) %></li>
     <% end %>
   <% end %>
 </ul>
