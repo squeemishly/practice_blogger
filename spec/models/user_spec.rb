@@ -17,6 +17,7 @@ RSpec.describe User, type: :model do
 
   context "relationships" do
     it { should have_many(:articles) }
+    it { should have_many(:suspensions) }
 
     context "user avatar" do
       it "should have one avatar attached" do
