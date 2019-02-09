@@ -53,4 +53,35 @@ describe "Admin Dashboard" do
       expect(page).to_not have_link user3.username
     end
   end
+
+  describe "recent activity" do
+    describe "recent articles" do
+      attr_reader :user2, :article2
+
+      before(:each) do
+        @user2 = create(:rando_user)
+        @article2 = create(:article, title: "second article", user: user2)
+      end
+
+      it "displays the most recent articles in descending order" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
+
+        visit admin_dashboard_path(admin)
+
+        expect(page).to have_content "#{article2.title} by #{user2.username} #{article.title} by #{user.username}"
+      end
+
+      context "suspended users" do
+        it "does not display the articles of suspended users" do
+          Suspension.create(user: user, is_suspended: true)
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
+
+          visit admin_dashboard_path(admin)
+
+          expect(page).to have_content "#{article2.title} by #{user2.username}"
+          expect(page).to_not have_content "#{article.title} by #{user.username}"
+        end
+      end
+    end
+  end
 end
