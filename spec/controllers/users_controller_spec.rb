@@ -64,6 +64,40 @@ describe UsersController do
       expect(response.status).to eq 200
       assert_template :show
     end
+
+    context "suspended users" do
+      context "the suspended user or an admin" do
+        it "renders the page" do
+          Suspension.create(user: user, is_suspended: true)
+          users = [admin, user]
+
+          users.each do |tested_user|
+            allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
+
+            get :show, params: { id: user.id }
+
+            expect(response.status).to eq 200
+            assert_template :show
+          end
+        end
+      end
+
+      context "any other user or visitor" do
+        it "renders a 404" do
+          Suspension.create(user: user, is_suspended: true)
+          users = [rando_user, nil]
+
+          users.each do |tested_user|
+            allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
+
+            get :show, params: { id: user.id }
+
+            expect(response.status).to eq 404
+            expect(response).to render_template(file: "#{Rails.root}/public/404.html")
+          end
+        end
+      end
+    end
   end
 
   context ".edit" do

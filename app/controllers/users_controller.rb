@@ -16,6 +16,12 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    if @user.suspended?
+      if current_user == @user || current_admin?
+      else
+        render file: "/public/404", status: 404
+      end
+    end
   end
 
   def edit
