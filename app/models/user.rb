@@ -16,4 +16,8 @@ class User < ApplicationRecord
   def suspended?
     suspensions.where(is_suspended: true).any?
   end
+
+  def is_admin?
+    role == "admin"
+  end
 end
