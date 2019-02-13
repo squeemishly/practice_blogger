@@ -10,8 +10,12 @@ class AdminsController < ApplicationController
   end
 
   def destroy
-    @user = User.find(params[:id])
-    @user.update(role: 0)
-    redirect_to user_path(@user)
+    if current_admin?
+      @user = User.find(params[:id])
+      @user.update(role: 0)
+      redirect_to user_path(@user)
+    else
+      render_403
+    end
   end
 end
