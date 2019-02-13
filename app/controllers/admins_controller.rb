@@ -1,8 +1,12 @@
 class AdminsController < ApplicationController
   def new
-    @user = User.find(params[:user_id])
-    @user.update(role: 1)
-    redirect_to user_path(@user)
+    if current_admin?
+      @user = User.find(params[:user_id])
+      @user.update(role: 1)
+      redirect_to user_path(@user)
+    else
+      render_403
+    end
   end
 
   def destroy
