@@ -6,21 +6,23 @@
     <%= image_tag('default_avatar.png', class: "avatar") %>
 <% end %>
 
-<% if current_admin? %>
-  <% if @user.suspended? %>
-    <%= button_to "Reactivate User", suspension_path, method: :put, params: {user: @user.id}, class: "btn" %>
-  <% else %>
-    <%= button_to "Suspend User", suspensions_path(1), method: :post, params: {user: @user.id}, class: "btn" %>
+<div class="user-controls">
+  <% if current_admin? %>
+    <% if @user.suspended? %>
+      <%= button_to "Reactivate User", suspension_path, method: :put, params: {user: @user.id}, class: "btn usr-control-btn" %>
+    <% else %>
+      <%= button_to "Suspend User", suspensions_path(1), method: :post, params: {user: @user.id}, class: "btn usr-control-btn" %>
+    <% end %>
   <% end %>
-<% end %>
 
-<% if current_admin? %>
-  <% if @user.admin? %>
-    <%= button_to "Remove Admin", admin_path(@user), method: :delete %>
-  <% else %>
-    <%= button_to "Make Admin", new_admin_path, params: {user_id: @user.id}, method: :get %>
+  <% if current_admin? %>
+    <% if @user.admin? %>
+      <%= button_to "Remove Admin", admin_path(@user), method: :delete, class: "btn usr-control-btn" %>
+    <% else %>
+      <%= button_to "Make Admin", new_admin_path, params: {user_id: @user.id}, method: :get, class: "btn usr-control-btn" %>
+    <% end %>
   <% end %>
-<% end %>
+</div>
 
 <% if current_user && (@user.id == current_user.id || current_admin?) %>
 
