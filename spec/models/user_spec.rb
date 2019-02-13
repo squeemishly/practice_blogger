@@ -52,5 +52,17 @@ RSpec.describe User, type: :model do
         expect(user.suspended?).to be false
       end
     end
+
+    context ".is_admin?" do
+      it "returns true when a user is an admin" do
+        user.role = "admin"
+
+        expect(user.is_admin?).to eq true
+      end
+
+      it "returns false when a user is not an admin" do
+        expect(user.is_admin?).to eq false
+      end
+    end
   end
 end
