@@ -6,8 +6,6 @@ This app was created to allow customers and new employees to have a tool to test
 
 ![Homepage Screenshot](https://github.com/squeemishly/practice_blogger/blob/master/app/assets/images/app_screenshots/practice-blogger-home.png)
 
-# Setup
-
 ## Database
 
 I used postgres. Run your standard rails commands to set up your local environment:
@@ -16,42 +14,102 @@ I used postgres. Run your standard rails commands to set up your local environme
 1. rake db:migrate
 1. rake db:seed
 
-## AWS bucket
+## Setup
 
-User profile photos are stored in an AWS bucket. You'll need to [set up your own bucket](https://docs.aws.amazon.com/AmazonS3/latest/user-guide/create-bucket.html) and [grab the credentials from your account](https://aws.amazon.com/blogs/security/wheres-my-secret-access-key/).
+The basic flow of a request through Fastly will be this:
 
-### Set up your AWS bucket in the App
+1. A user makes a request to a domain you have purchased, e.g. `www.example.com`
+1. There is a DNS lookup on that domain. Your DNS should point to Fastly.
+1. Fastly receives the request. If the object is in cache, it will respond with that object. If it isn't...
+1. Fastly will go to your origin to retrieve that object.
+1. Fastly receives the object from your origin.
+1. Fastly caches that object.
+1. Fastly responds to the client with the object.
 
-I used the Figaro gem to secure my environment variables. To set up your AWS bucket in the app:
+For more on how Fastly works, [check our docs](https://docs.fastly.com/guides/basic-setup/getting-started-with-fastly)!
+
+The steps described below will outline how to setup Heroku to host this app and be your origin. Once the app is up and running through Fastly, you're free to test out how various features impact requests to this magnificent app!
+
+### AWS bucket
+
+User profile photos are stored in an AWS bucket. So before we can host the app on Heroku, you'll need to [set up your own bucket](https://docs.aws.amazon.com/AmazonS3/latest/user-guide/create-bucket.html) and [grab the credentials from your account](https://aws.amazon.com/blogs/security/wheres-my-secret-access-key/). Once your bucket is created, you'll need to tell the app where this bucket is.
+
+#### Set up your AWS bucket in the App
+
+I used the [Figaro gem](https://github.com/laserlemon/figaro) to secure my environment variables. To set up your AWS bucket in the app:
 
 1. Run `bundle exec figaro install` in your terminal.
 1. Set the `aws_access_key_id:` and `aws_secret_access_key:` environment variables in `config/application.yml`.
 1. In `config/storage.yml`, change the region and bucket in your `amazon` setup to match your S3 configuration.
 
-## Heroku
+### Heroku
 
-### Deploying
+#### Deploying
 
-1. Create a heroku login
-1. Download the heroku cli
-1. In terminal, run `heroku login` and follow instructions
-1. In terminal, in the app's directory, run `heroku create`
-1. Run `git push heroku master`
-1. Run `heroku run rake db:migrate`
-1. Run `figaro heroku:set -e production` to set environment variables
-1. Run `heroku run rake db:seed` to create some fake seed data
-1. Run `heroku open` to see your beautiful new app
+1. Create a [heroku login](https://id.heroku.com/login).
+1. Download and install the [heroku cli](https://devcenter.heroku.com/articles/heroku-cli#download-and-install).
+1. In terminal, run `heroku login` and follow instructions.
+1. CD into the app's directory.
+1. Run `heroku create` to add a heroku endpoint to your git repo.
+1. Run `git push heroku master` to push the app to the heroku endpoint.
+1. Run `heroku run rake db:migrate` to create the database schema for the app.
+1. Run `figaro heroku:set -e production` to set environment variables.
+1. Run `heroku run rake db:seed` to create some fake seed data.
+1. Run `heroku open` to see your beautiful new app.
 
-### Make an Admin
+#### Make an Admin
 
+1. Open the app in your browser. You can use `heroku open` from the app directory in your terminal.
 1. Create an account for yourself in the app. Remember your username.
-1. In your terminal, in the app directory, run `heroku pg:psql`.
+1. In app directory in terminal, run `heroku pg:psql` (see NOTE below).
 1. In the heroku postgres database, you can see your account info with `Select username, role from users where username like '<your_username>';`.
 1. To update your account to an admin, run `Update users set role = 1 where username like '<your_username>';`.
 1. Go back to your app and revel in the administrative glory.
 
-# Testing
+**NOTE:** You must have [postgres installed on your machine](https://www.postgresql.org/download/) to be able to access the apps postgres database.
 
-I used RSPEC for testing. To run the full test suite, just run `rspec` in your terminal. Otherwise, `rails s` and click around!
+### Purchase your Domain
 
-# Features
+To get a service up and running on Fastly, you'll need a domain that you can point the internet to. The domain Heroku gives you, e.g. `salty-lake-12345.herokuapp.com`, is where you're going to point Fastly. You can use any domain registrar.
+
+### Fastly
+
+1. Create an account.
+1. Create a service on that account.
+1. In the `Configure` tab, under the `Domains` section, click on `Create Your First Domain`.
+1. Add the domain you purchased from the domain registrar.
+1. In the `Configure` tab, under the `Origins` section, click on `Create Your First Host`.
+1. Give your origin a name, e.g. `heroku_app`.
+1. In the Address field, enter the domain Heroku gave you.
+1. Let's skip setting up TLS for now. Under `Enable TLS`, select the `No` radio button.
+1. Click on `Create` at the bottom of the page.
+1. In the `Configure` tab, under the `Settings` section, click the toggle to `Override Host` (see NOTE below).
+1. In the field that appears, enter your Heroku domain.
+1. Click the `Save` button.
+1. Click the `Activate` button at the top of the screen.
+
+**NOTE:** In a request to an origin server, Fastly will pass along the Host domain from the request. So if you bought `www.example.com` and you run that through Fastly, we will send that to the origin to find the object we're looking for. Unfortunately, Heroku doesn't know anything about `www.example.com`, so we'll get back a generic "This content has not been created yet" message from Heroku. By overriding the Host header, we're telling Heroku to look for our particular application on their servers.
+
+### Point your DNS
+
+Now that we have Fastly set up and Fastly knows where Heroku is, we need to make sure the rest of the internet knows to go to Fastly to request our application. Go back to your domain registrar and manage your DNS for your domain.
+
+If you used an apex domain, e.g. `example.com`, you will need to add A records to your DNS that point to Fastly. Please contact support at support@fastly.com to receive those IPs.
+
+If you used a subdomain, e.g. `www.example.com`, you can add a CNAME to your DNS to point to Fastly:
+
+```
+nonssl.global.fastly.net
+```
+
+### Check it out
+
+If you set everything up correctly, you should be able to visit the domain you purchased from your domain registrar and see the application you hosted on Heroku.
+
+## Testing
+
+I used RSPEC for testing. To run the full test suite, just run `rspec` in your terminal. Otherwise, `rails s` and visit localhost:3000 to click around!
+
+## Features
+
+TODO
