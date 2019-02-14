@@ -12,4 +12,14 @@
 //
 //= require rails-ujs
 //= require activestorage
+//= require jquery
 //= require_tree .
+
+$(document).ready(function(){
+  $(".delete-confirmation").click(function(event){
+    var cont = confirm("Do you really want to delete this?");
+    if (!cont) {
+      event.preventDefault();
+    }
+  })
+})

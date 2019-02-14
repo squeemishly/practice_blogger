@@ -17,6 +17,7 @@ gem 'kaminari'
 gem 'figaro'
 gem "aws-sdk-s3", require: false
 gem 'rails-controller-testing'
+gem 'jquery-rails'
 
 group :development, :test do
   gem 'rspec-rails'

@@ -16,7 +16,7 @@
 <% end %>
 
 <% if (current_user && (current_user.id == @article.user.id || current_admin?)) %>
-  <%= button_to "Delete Post", article_path(@article.id), class: "btn article-button", method: :delete %>
+  <%= button_to "Delete Post", article_path(@article.id), class: "btn article-button delete-confirmation", method: :delete %>
 <% end %>
 
 <% if current_user %>
@@ -47,7 +47,7 @@
           <%= comment.created_at.strftime("Posted: %m/%d/%Y") %><br />
           <div class="comments-options-buttons">
             <% if current_user && (current_user == @article.user || current_user == comment.user || current_admin?) %>
-              <%= button_to "Delete Comment", article_comment_path(@article, comment), class: "btn comments-option", method: :delete %>
+              <%= button_to "Delete Comment", article_comment_path(@article, comment), class: "btn comments-option delete-confirmation", method: :delete %>
             <% end %>
 
             <% if current_user == comment.user %>
