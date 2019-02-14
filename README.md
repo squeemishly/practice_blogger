@@ -2,8 +2,7 @@
 
 This app was created to allow customers and new employees to have a tool to test out Fastly configurations. It is not sophisticated. But it does have the primary elements most apps have to allow engineers to test out the tools available to you on Fastly. Enjoy!
 
-[See it live on Heroku](https://sleepy-lake-50116.herokuapp.com/)
-[Check it out on Fastly](http://practice-blogger.com)
+[See it live on Heroku](https://sleepy-lake-50116.herokuapp.com/) or [check it out running through Fastly](http://practice-blogger.com).
 
 ![Homepage Screenshot](https://github.com/squeemishly/practice_blogger/blob/master/app/assets/images/app_screenshots/practice-blogger-home.png)
 
@@ -19,7 +18,7 @@ I used postgres. Run your standard rails commands to set up your local environme
 
 ## AWS bucket
 
-User profile photos are stored in an AWS bucket. You'll need to set up your own bucket and grab the credentials from it.
+User profile photos are stored in an AWS bucket. You'll need to [set up your own bucket](https://docs.aws.amazon.com/AmazonS3/latest/user-guide/create-bucket.html) and [grab the credentials from your account](https://aws.amazon.com/blogs/security/wheres-my-secret-access-key/).
 
 ### Set up your AWS bucket in the App
 
