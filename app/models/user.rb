@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_one_attached :avatar
   has_many :articles, dependent: :destroy
+  has_many :comments, dependent: :destroy
   has_many :suspensions, dependent: :destroy
 
   validates :username, presence: true, uniqueness: true
@@ -19,5 +20,13 @@ class User < ApplicationRecord
 
   def is_admin?
     role == "admin"
+  end
+
+  def self.most_articles
+    joins(:articles).group(:id).order(count: :desc).limit(5)
+  end
+
+  def self.most_comments
+    joins(:comments).group(:id).order(count: :desc).limit(5)
   end
 end

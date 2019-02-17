@@ -41,7 +41,7 @@ RSpec.describe User, type: :model do
   end
 
   context "methods" do
-    context ".suspended?" do
+    context "#suspended?" do
       it "returns true when a user is suspended" do
         user.suspensions.create(user: user, is_suspended: true)
 
@@ -53,7 +53,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context ".is_admin?" do
+    context "#is_admin?" do
       it "returns true when a user is an admin" do
         user.role = "admin"
 
@@ -62,6 +62,40 @@ RSpec.describe User, type: :model do
 
       it "returns false when a user is not an admin" do
         expect(user.is_admin?).to eq false
+      end
+    end
+
+    context ".most_articles" do
+      it "returns the users with the most articles" do
+        rando_user = create(:rando_user)
+        diff_user = create(:diff_user)
+        create(:article, user: rando_user)
+        2.times do
+          create(:article, user: user)
+        end
+
+        expected = [user, rando_user]
+
+        expect(User.most_articles).to eq expected
+        expect(User.most_articles.any? { |user| user.username == diff_user.username}).to be false
+      end
+    end
+
+    context ".most_comments" do
+      it "returns the users with the most comments" do
+        rando_user = create(:rando_user)
+        diff_user = create(:diff_user)
+        article = create(:article, user: rando_user)
+        create(:comment, article: article, user: rando_user)
+        2.times do
+          create(:comment, article: article, user: user)
+        end
+
+        expected = [user, rando_user]
+
+        expect(User.most_comments).to eq expected
+        expect(User.most_comments.any? { |user| user.username == diff_user.username}).to be false
+
       end
     end
   end
