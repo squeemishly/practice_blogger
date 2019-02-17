@@ -23,7 +23,46 @@
   <% @articles.each do |article| %>
     <% if article.user.suspended? %>
     <% else %>
-      <li><strong><%= link_to article.title, article_path(article.id) %></strong> by <%= article.user.username %></li>
+      <li><strong><%= link_to article.title, article_path(article.id) %></strong> by <%= link_to article.user.username, user_path(article.user) %></li>
     <% end %>
   <% end %>
 </ul>
+
+<table>
+  <tr>
+    <td>Total Users:</td>
+    <td><%= User.count %></td>
+  </tr>
+  <tr>
+    <td>Total Number of Articles:</td>
+    <td><%= Article.count %></td>
+  </tr>
+  <tr>
+    <td>Total Number of Comments:</td>
+    <td><%= Comment.count %></td>
+  </tr>
+  <tr>
+    <td>Users with the most Articles:</td>
+    <td>
+      <% User.most_articles.each do |user| %>
+        <%= link_to user.username, user_path(user) %>: <%= user.articles.count %><br />
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td>Articles with the most Comments:</td>
+    <td>
+      <% Article.most_comments.each do |article| %>
+        <%= link_to article.title, article_path(article) %>: <%= article.comments.count %><br />
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td>Users who comment the most:</td>
+    <td>
+      <% User.most_comments.each do |user| %>
+        <%= link_to user.username, user_path(user) %>: <%= user.comments.count %><br />
+      <% end %>
+    </td>
+  </tr>
+</table>
