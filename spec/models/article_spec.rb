@@ -1,21 +1,21 @@
 require 'rails_helper'
 
 RSpec.describe Article, type: :model do
-  attr_reader :user, :article, :comment
+  attr_reader :user, :comment
 
   before(:each) do
     @user = create(:user)
 
     (1..15).each do |i|
-      @article = create(:article,
-                        title: "fake title #{i}",
-                        body: "fake body",
-                        user: user)
+      create(:article,
+              title: "fake title #{i}",
+              body: "fake body",
+              user: user)
     end
 
     @comment = create(:comment,
                         user: user,
-                        article: article)
+                        article: Article.last)
   end
 
   context "attributes" do
@@ -28,7 +28,7 @@ RSpec.describe Article, type: :model do
     it { should have_many(:comments) }
 
     it "will delete any comments when an article is deleted" do
-      expect { article.destroy }.to change { Comment.count }.by(-1)
+      expect { Article.last.destroy }.to change { Comment.count }.by(-1)
     end
 
   end
@@ -69,6 +69,22 @@ RSpec.describe Article, type: :model do
         expected = ["fake title 13", "fake title 12"]
 
         expect(article_titles).to eq expected
+      end
+    end
+
+    context ".most_comments" do
+      it "returns the most commented on articles" do
+        5.times do
+          create(:comment, article: Article.last, user: user)
+        end
+
+        4.times do
+          create(:comment, article: Article.first, user: user)
+        end
+
+        expected = [Article.last, Article.first]
+
+        expect(Article.most_comments).to eq expected
       end
     end
   end

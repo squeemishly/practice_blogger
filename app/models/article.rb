@@ -12,4 +12,8 @@ class Article < ApplicationRecord
     articles_list = Article.order(created_at: :desc)
     Kaminari.paginate_array(articles_list).page(page_number).per(limit)
   end
+
+  def self.most_comments
+    joins(:comments).group(:id).order(count: :desc).limit(5)
+  end
 end
