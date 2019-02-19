@@ -12,15 +12,21 @@ describe "Admin Dashboard" do
   describe "access" do
     context "a user" do
       it "is not allowed to see the admin dashboard" do
-        visit admin_dashboard_path(admin)
+        users = [nil, user]
 
-        expect(page.status_code).to eq 403
-        expect(page).to have_content "You are not authorized to enter this area."
+        users.each do |tested_user|
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
 
-        visit admin_dashboard_path(user)
+          visit admin_dashboard_path(admin)
 
-        expect(page.status_code).to eq 403
-        expect(page).to have_content "You are not authorized to enter this area."
+          expect(page.status_code).to eq 403
+          expect(page).to have_content "You are not authorized to enter this area."
+
+          visit admin_dashboard_path(user)
+
+          expect(page.status_code).to eq 403
+          expect(page).to have_content "You are not authorized to enter this area."
+        end
       end
     end
 
@@ -82,6 +88,15 @@ describe "Admin Dashboard" do
           expect(page).to_not have_content "#{article.title} by #{user.username}"
         end
       end
+    end
+  end
+
+  context "suspended users button" do
+    it "has a button to show all user suspensions" do
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
+      visit admin_dashboard_path(admin)
+
+      expect(page).to have_button "View Suspended Users"
     end
   end
 end

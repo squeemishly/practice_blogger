@@ -6,34 +6,32 @@
     <%= image_tag('default_avatar.png', class: "avatar") %>
 <% end %>
 
-<div class="user-controls">
-  <% if current_admin? %>
+<% if current_admin? %>
+  <div class="user-controls">
     <% if @user.suspended? %>
       <%= button_to "Reactivate User", suspension_path, method: :put, params: {user: @user.id}, class: "btn usr-control-btn" %>
     <% else %>
       <%= button_to "Suspend User", suspensions_path(1), method: :post, params: {user: @user.id}, class: "btn usr-control-btn" %>
     <% end %>
-  <% end %>
 
-  <% if current_admin? %>
     <% if @user.admin? %>
       <%= button_to "Remove Admin", admin_path(@user), method: :delete, class: "btn usr-control-btn" %>
     <% else %>
       <%= button_to "Make Admin", new_admin_path, params: {user_id: @user.id}, method: :get, class: "btn usr-control-btn" %>
     <% end %>
-  <% end %>
-</div>
+  </div>
 
-<% if @user.suspensions %>
-<h3>User Suspensions</h3>
-  <table>
-    <% @user.suspensions.each do |suspension| %>
-      <tr>
-        <td><%= suspension.created_at %></td>
-      </tr>
-    <% end %>
-  </table>
-  <hr>
+  <% if @user.suspensions %>
+  <h3>User Suspensions</h3>
+    <table>
+      <% @user.suspensions.each do |suspension| %>
+        <tr>
+          <td><%= suspension.created_at.to_date %></td>
+        </tr>
+      <% end %>
+    </table>
+    <hr>
+  <% end %>
 <% end %>
 
 

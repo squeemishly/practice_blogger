@@ -8,6 +8,41 @@ describe "user profile pages" do
     @admin = create(:admin)
   end
 
+  context "previous suspensions" do
+    attr_reader :suspension
+    before(:each) do
+      @suspension = Suspension.create(user: user, is_suspended: true)
+    end
+
+    context "as an admin" do
+      it "displays all previous suspensions for the user" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
+
+        visit user_path(user)
+
+        expect(page).to have_content "User Suspensions"
+        expect(page).to have_content suspension.created_at.to_date
+      end
+    end
+
+    context "unpermitted users" do
+      context "visitors, users" do
+        it "does not display any previous suspensions" do
+          users = [nil, user]
+
+          users.each do |tested_user|
+            allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
+
+            visit user_path(user)
+
+            expect(page).to_not have_content "User Suspensions"
+            expect(page).to_not have_content suspension.created_at.to_date
+          end
+        end
+      end
+    end
+  end
+
   context "suspend user" do
     context "as an admin" do
       it "has a button to suspend/reactivate the user" do
