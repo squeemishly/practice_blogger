@@ -16,6 +16,6 @@ Rails.application.routes.draw do
   end
 
   resources :search, only: [:show]
-  resources :suspensions, only: [:create, :update]
+  resources :suspensions, only: [:create, :update, :index]
   resources :admins, only: [:new, :destroy]
 end

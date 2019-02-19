@@ -12,9 +12,17 @@ class SuspensionsController < ApplicationController
   def update
     if current_admin?
       user = User.find(params[:user])
-      suspension = Suspension.find_by(user_id: user.id)
+      suspension = Suspension.where(user_id: user.id).order(created_at: :desc).limit(1)
       suspension.update(is_suspended: false)
       redirect_to user_path(user)
+    else
+      render_403
+    end
+  end
+
+  def index
+    if current_admin?
+      @users = User.joins(:suspensions).uniq
     else
       render_403
     end

@@ -1,0 +1,33 @@
+<h1>Suspended Users</h1>
+
+<% if @users %>
+<h3>Currently Suspended Users:</h3>
+  <table>
+  <% @users.each do |user| %>
+    <% if user.suspended? %>
+      <tr>
+        <td><%= link_to user.username, user_path(user) %></td>
+        <td><%= user.suspensions.last.created_at.to_date %></td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+
+<br />
+<br />
+<br />
+
+<h3>All previously Suspended Users</h3>
+<table>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= link_to user.username, user_path(user) %></td>
+      <td><%= user.suspensions.last.created_at.to_date %></td>
+      <td>Suspended <%= user.suspensions.count %> time(s)</td>
+    </tr>
+  <% end %>
+</table>
+
+<% else %>
+  No Users have ever been suspended. Congratulations on your clean community.
+<% end %>

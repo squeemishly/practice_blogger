@@ -60,4 +60,29 @@ describe SuspensionsController do
       end
     end
   end
+
+  context ".index" do
+    context "as an admin" do
+      it "renders the index page" do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
+         get :index
+
+         assert_template :index
+      end
+    end
+
+    context "as a user" do
+      it "returns a 403" do
+        users = [nil, user]
+
+        users.each do |tested_user|
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(tested_user)
+          get :index
+
+          expect(response.status).to eq 403
+          expect(response).to render_template(file: "#{Rails.root}/public/403.html")
+        end
+      end
+    end
+  end
 end
