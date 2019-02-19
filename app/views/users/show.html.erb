@@ -21,16 +21,16 @@
     <% end %>
   </div>
 
-  <% if @user.suspensions %>
-  <h3>User Suspensions</h3>
-    <table>
-      <% @user.suspensions.each do |suspension| %>
-        <tr>
-          <td><%= suspension.created_at.to_date %></td>
-        </tr>
-      <% end %>
-    </table>
-    <hr>
+  <% if @user.suspensions.count > 0 %>
+    <h3>User Suspensions</h3>
+      <table>
+        <% @user.suspensions.each do |suspension| %>
+          <tr>
+            <td><%= suspension.created_at.to_date %></td>
+          </tr>
+        <% end %>
+      </table>
+      <hr>
   <% end %>
 <% end %>
 
