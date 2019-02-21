@@ -8,7 +8,17 @@ This app was created to allow customers and new employees to have a tool to test
 
 ## Database
 
-I used postgres. Run your standard rails commands to set up your local environment:
+I used postgres. The basic schema is this:
+
+![Schema Screenshot](https://github.com/squeemishly/practice_blogger/blob/master/app/assets/images/app_screenshots/schema.png)
+
+### Install Postgres
+
+Run `psql` in your terminal. If you see a `command not found` error, you need to install Postgres. I recommend using [Homebrew](https://brew.sh/) bun running this command: `brew install postgresql`.
+
+### Local Environment Setup
+
+You only need to do this if you want to see the app on your local server. To do so, run your standard rails commands to set up your local environment:
 
 1. rake db:create
 1. rake db:migrate
@@ -29,6 +39,16 @@ The basic flow of a request through Fastly will be this:
 For more on how Fastly works, [check our docs](https://docs.fastly.com/guides/basic-setup/getting-started-with-fastly)!
 
 The steps described below will outline how to setup Heroku to host this app and be your origin. Once the app is up and running through Fastly, you're free to test out how various features impact requests to this magnificent app!
+
+### Ruby
+
+This app uses Ruby version 2.5.0. If you don't have this installed on your machine, you'll need to install it. To do so, start by installing the Ruby Version Manager:
+
+1. Run `\curl -sSL https://get.rvm.io | bash` in your terminal.
+1. Run `rvm install 2.5.0` in your terminal.
+1. Run `bundle` to set up your gems.
+
+If you see an error similar to `Your Ruby version is 2.3.7, but your Gemfile specified 2.5.0`, run `rvm use 2.5.0` to force your machine to use the correct version of Ruby.
 
 ### AWS bucket
 
@@ -61,12 +81,10 @@ I used the [Figaro gem](https://github.com/laserlemon/figaro) to secure my envir
 
 1. Open the app in your browser. You can use `heroku open` from the app directory in your terminal.
 1. Create an account for yourself in the app. Remember your username.
-1. In app directory in terminal, run `heroku pg:psql` (see NOTE below).
+1. In app directory in terminal, run `heroku pg:psql`.
 1. In the heroku postgres database, you can see your account info with `Select username, role from users where username like '<your_username>';`.
 1. To update your account to an admin, run `Update users set role = 1 where username like '<your_username>';`.
 1. Go back to your app and revel in the administrative glory.
-
-**NOTE:** You must have [postgres installed on your machine](https://www.postgresql.org/download/) to be able to access the apps postgres database.
 
 ### Purchase your Domain
 
