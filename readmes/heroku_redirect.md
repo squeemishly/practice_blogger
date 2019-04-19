@@ -1,0 +1,1 @@
+# Redirect From Heroku

@@ -101,12 +101,9 @@ To get a service up and running on Fastly, you'll need a domain that you can poi
 1. In the Address field, enter the domain Heroku gave you.
 1. Let's skip setting up TLS for now. Under `Enable TLS`, select the `No` radio button.
 1. Click on `Create` at the bottom of the page.
-1. In the `Configure` tab, under the `Settings` section, click the toggle to `Override Host` (see NOTE below).
-1. In the field that appears, enter your Heroku domain.
-1. Click the `Save` button.
 1. Click the `Activate` button at the top of the screen.
 
-**NOTE:** In a request to an origin server, Fastly will pass along the Host domain from the request. So if you bought `www.example.com` and you run that through Fastly, we will send that to the origin to find the object we're looking for. Unfortunately, Heroku doesn't know anything about `www.example.com`, so we'll get back a generic "This content has not been created yet" message from Heroku. By overriding the Host header, we're telling Heroku to look for our particular application on their servers.
+**NOTE:** In a request to an origin server, Fastly will pass along the Host domain from the request. So if you bought `www.example.com` and you run that through Fastly, we will send that to the origin to find the object we're looking for. Unfortunately, Heroku doesn't know anything about `www.example.com`, so we'll get back a generic "This content has not been created yet" message from Heroku. Later, in the `Fixing the Problems` section, we'll look at how to solve this problem by overriding the Host header.
 
 ### Point your DNS
 
@@ -122,12 +119,16 @@ nonssl.global.fastly.net
 
 ### Check it out
 
-If you set everything up correctly, you should be able to visit the domain you purchased from your domain registrar and see the application you hosted on Heroku.
+If you set everything up correctly, you should be able to visit the domain you purchased from your domain registrar and see a Heroku message.
+
+But... There's a series of problems. The following section will identify the problems and guide you through fixing them. I recommend reading the section on the problem and attempting to figure out a solution for yourself. If you get stuck, use the tutorial to help you set up your service.
+
+## Fixing the Problems
+
+1. Update the Host header so Heroku can find your app
+1. Redirect from Heroku
+1. Redirect from S3
 
 ## Testing
 
 I used RSPEC for testing. To run the full test suite, just run `rspec` in your terminal. Otherwise, `rails s` and visit localhost:3000 to click around!
-
-## Features
-
-TODO
