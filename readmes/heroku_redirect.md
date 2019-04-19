@@ -45,7 +45,19 @@ Clearly, you will need to change this code block so `salty-lake-12345.herokuapp.
 
 ## Super Secret Awesome Knowledge
 
-<details><summary></summary>
+<details><summary>Wanna Know How to Fix This Using Rails?</summary>
+Rails has a really cool feature where if you send in an `x-forwarded-host` header, it will respect that header when it creates redirects. So if I pass my request to Rails, and it contains `x-forwarded-host: www.example.com`, when Rails issues a redirect, instead of pointing to the Heroku app, it will point to `www.example.com`.
+
+To implement this solution, we can edit the code block we created when we [updated our host](../update_the_host.md). Try changing the snippets for `vcl_miss` and `vcl_pass` to the following:
+
+```perl
+if (req.backend == F_heroku) {
+  set bereq.http.host = "salty-lake-12345.herokuapp.com";
+  set bereq.http.x-forwarded-host = "www.example.com";
+}
+```
+
+You will need to change this code block so `salty-lake-12345.herokuapp.com` points to your URL on Heroku and `www.example.com` is your purchased domain.
 </details>
 
-[Return Home](../../)
+[Return Home](https://github.com/squeemishly/practice_blogger)
