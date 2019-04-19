@@ -125,9 +125,9 @@ But... There's a series of problems. The following section will identify the pro
 
 ## Fixing the Problems
 
-1. Update the Host header so Heroku can find your app
-1. Redirect from Heroku
-1. Redirect from S3
+1. [Update the Host header so Heroku can find your app](/readmes/update_the_host.md)
+1. [Redirect from Heroku](/readmes/heroku_redirect.md)
+1. [Redirect from S3](/readmes/s3_redirect.md)
 
 ## Testing
 
