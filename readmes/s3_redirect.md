@@ -51,7 +51,7 @@ When this works correctly, we should see a 200 response.
 
 Please try to implement a solution before revealing the possible solution below. This answer is just one possible solution. If you got your app working one way, try sticking with that way and see where problems may come up. This can help you troubleshoot other issues better in the future.
 
-<details><summary></summary>
+<details><summary>Click to See One Possible Solution</summary>
 Because I don't want to have to encode the URL myself, and because Rails is sending back a URL that already has all the variables S3 needs to find our account and the specific photo in that account, I want to just grab the URL from the `Location` header in the 302 that comes back. We can do that with some [good ol' fashioned regex](https://docs.fastly.com/guides/vcl-tutorials/vcl-regular-expression-cheat-sheet).
 
  Let's start by building a condition in `vcl_fetch` that looks for a `Location` header that points to our S3 bucket:
