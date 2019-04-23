@@ -47,3 +47,5 @@ unset bereq.http.host;
 
 Why do you think I'm unsetting the `bereq` Host and not the `req` Host?
 </details>
+
+[Return Home](https://github.com/squeemishly/practice_blogger)
