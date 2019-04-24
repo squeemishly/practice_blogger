@@ -128,6 +128,7 @@ But... There's a series of problems. The following section will identify the pro
 1. [Update the Host header so Heroku can find your app](/readmes/update_the_host.md)
 1. [Redirect from Heroku](/readmes/heroku_redirect.md)
 1. [Redirect from S3](/readmes/s3_redirect.md)
+1. [Heroku Timeouts](/readmes/heroku_timeouts.md)
 
 ## Testing
 
