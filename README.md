@@ -8,9 +8,7 @@ This app was created to allow customers and new employees to have a tool to test
 
 ## Database
 
-I used postgres. The basic schema is this:
-
-![Schema Screenshot](https://github.com/squeemishly/practice_blogger/blob/master/app/assets/images/app_screenshots/schema.png)
+I used postgres in this app. You might need to do some setup to get this working on your end.
 
 ### Install Postgres
 
