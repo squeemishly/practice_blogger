@@ -37,7 +37,7 @@ if(beresp.http.Location ~ "salty-lake-12345.herokuapp.com(.*)") {
 }
 ```
 
-Here's what we're doing: We're checking to see if the backend response has a `Location` header that points to our Heroku app. That bit at the end, `(.*)`, will grab everything that comes after the domain. That value is the path that we're interested in. By surrounding it in parentheses, we're making a group out of whatever that URL happens to be. We can reference that value by calling `re.group.1`, which stands for `regex group 1`. If you want to be thorough, you can add in your protocol, `http://`, and your domain, `www.example.com`; however, if the browser receives a redirect that only contains the path, it assumes that it needs to keep using the same domain it was already working with, just go to a different path.
+Here's what we're doing: We're checking to see if the backend response has a `Location` header that points to our Heroku app. That bit at the end, `(.*)`, will grab everything that comes after the domain using some [good ol' fashioned regex](https://docs.fastly.com/guides/vcl-tutorials/vcl-regular-expression-cheat-sheet). That value is the path that we're interested in. By surrounding it in parentheses, we're making a group out of whatever that URL happens to be. We can reference that value by calling `re.group.1`, which stands for `regex group 1`. If you want to be thorough, you can add in your protocol, `http://`, and your domain, `www.example.com`; however, if the browser receives a redirect that only contains the path, it assumes that it needs to keep using the same domain it was already working with, just go to a different path.
 
 Clearly, you will need to change this code block so `salty-lake-12345.herokuapp.com` is replaced with your domain on Heroku.
 
