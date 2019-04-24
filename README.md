@@ -125,11 +125,31 @@ But... There's a series of problems. The following section will identify the pro
 
 ## Fixing the Problems
 
+Much of what we are going to do is going to require some understanding of VCL. I recommend reading [this blog post](https://www.integralist.co.uk/posts/fastly-varnish/) one of our customers wrote several years ago. Some aspects of VCL have changed, but does a great job of summarizing VCL flow. As a copy/paste from that post with only a little editing, here's a summary of the subroutines in VCL:
+
+```
+vcl_recv: request is received and can be inspected/modified.
+vcl_hash: generate a hash key from host/path and lookup key in cache.
+vcl_hit: hash key was found in the cache.
+vcl_miss: hash key was not found in the cache.
+vcl_pass: content should be fetched from origin, regardless of if it exists in cache or not, and response will not be cached.
+vcl_fetch: content has been fetched, we can now inspect/modify it before caching (or not) the object.
+vcl_deliver: content has been cached (or not, if we had used return(pass)) and ready to be delivered to the user.
+```
+
+Now, onto the problems:
+
 1. [Update the Host header so Heroku can find your app](/readmes/update_the_host.md)
 1. [Redirect from Heroku](/readmes/heroku_redirect.md)
 1. [Redirect from S3](/readmes/s3_redirect.md)
 1. [Heroku Timeouts](/readmes/heroku_timeouts.md)
 
-## Testing
+## Next Steps
 
-I used RSPEC for testing. To run the full test suite, just run `rspec` in your terminal. Otherwise, `rails s` and visit localhost:3000 to click around!
+Now that you have everything up and running through Fastly, it's time to start looking at how Fastly caches your objects. For example, [how long should Fastly cache your objects?](https://docs.fastly.com/guides/tutorials/cache-control-tutorial). We might want images cached for a week and HTML files cached for a day. Depends on your needs.
+
+Notice that approximately _none_ of your HTML files are caching currently. This is because our app is sending back a `set-cookie` header. Because cookies generally contain data related to a specific user, e.g. session information, we don't want to cache objects that use this cookie. But... we're not always using that cookie. See if you can figure out when you should strip `set-cookies` from the response so Fastly will cache the object.
+
+One fun project is controlling the different views a user can see. For example, when you visit an article as a visitor, you don't have an `Add a Comment` button, but if you visit as a logged in user, you do. We need to cache different objects depending on the session state. I recommend looking into the [Vary header](https://www.fastly.com/blog/best-practices-using-vary-header) to see if this could provide a potential solution.
+
+Fastly doesn't keep logs of customer requests. This can make identifying and troubleshooting issues pretty hard. We recommend all of our customers set up [remote log streaming](https://docs.fastly.com/guides/streaming-logs/setting-up-remote-log-streaming) so we can see what's actually going on with their service.
